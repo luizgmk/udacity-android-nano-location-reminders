@@ -8,6 +8,7 @@ import com.udacity.location_reminders.R
 import com.udacity.location_reminders.base.BaseFragment
 import com.udacity.location_reminders.databinding.FragmentSelectLocationBinding
 import com.udacity.location_reminders.location_reminders.savereminder.SaveReminderViewModel
+import com.udacity.location_reminders.utils.GoogleMapHelper
 import com.udacity.location_reminders.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
@@ -19,7 +20,7 @@ class SelectLocationFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_select_location, container, false)
 
@@ -29,13 +30,14 @@ class SelectLocationFragment : BaseFragment() {
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
-//        TODO: add the map setup implementation
-//        TODO: zoom to the user location after taking his permission
-//        TODO: add style to the map
-//        TODO: put a marker to location that the user selected
+        // DONE: add the map setup implementation
+        // DONE: zoom to the user location after taking his permission
+        GoogleMapHelper(this).requestLocationPermissions()
 
+        // TODO: add style to the map
+        // TODO: put a marker to location that the user selected
+        // TODO: call this function after the user confirms on the selected location
 
-//        TODO: call this function after the user confirms on the selected location
         onLocationSelected()
 
         return binding.root
