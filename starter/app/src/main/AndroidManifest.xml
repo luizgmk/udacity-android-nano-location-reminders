@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.udacity.location_reminders">
     <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         TODO: The ACCESS_COARSE/FINE_LOCATION permissions
+         are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
@@ -37,7 +38,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${googleMapsApiKey}" />
 
-        <activity android:name=".authentication.AuthenticationActivity" android:exported="true" />
+        <!--
+            using clearTaskOnLaunch to guarantee no remainder of previous login attempt is
+            ever preserved
+        -->
+        <activity
+            android:name=".authentication.AuthenticationActivity"
+            android:clearTaskOnLaunch="true"
+            android:exported="true" />
         <activity
             android:name=".location_reminders.RemindersActivity"
             android:exported="true">

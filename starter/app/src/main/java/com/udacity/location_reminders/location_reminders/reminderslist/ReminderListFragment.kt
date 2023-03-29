@@ -2,8 +2,12 @@ package com.udacity.location_reminders.location_reminders.reminderslist
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import com.udacity.location_reminders.R
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.base.BaseFragment
 import com.udacity.location_reminders.base.NavigationCommand
 import com.udacity.location_reminders.databinding.FragmentRemindersBinding
@@ -27,11 +31,13 @@ class ReminderListFragment : BaseFragment() {
             )
         binding.viewModel = _viewModel
 
-        setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(false)
         setTitle(getString(R.string.app_name))
+        setupMenu()
 
         binding.refreshLayout.setOnRefreshListener { _viewModel.loadReminders() }
+
+        if (!User.isAuthenticated) User.login(requireActivity())
 
         return binding.root
     }
@@ -68,20 +74,30 @@ class ReminderListFragment : BaseFragment() {
         binding.reminderssRecyclerView.setup(adapter)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.logout -> {
-//                TODO: add the logout implementation
+    // Sets up the options menu by using parent activity as a MenuHost
+    // followed article for migration from deprecated onCreateOptionsMenu
+    // https://medium.com/tech-takeaways/how-to-migrate-the-deprecated-oncreateoptionsmenu-b59635d9fe10
+    private fun setupMenu() {
+        val menuHost = (requireActivity() as MenuHost)
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onPrepareMenu(menu: Menu) {
+                // Handle for example visibility of menu items
             }
-        }
-        return super.onOptionsItemSelected(item)
 
-    }
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_menu, menu)
+            }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-//        display logout as menu item
-        inflater.inflate(R.menu.main_menu, menu)
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Validate and handle the selected menu item
+                when (menuItem.itemId) {
+                    R.id.logout -> {
+                        User.login(requireActivity())
+                    }
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
 }

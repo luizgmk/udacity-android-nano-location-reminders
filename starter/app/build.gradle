@@ -193,11 +193,12 @@ dependencies {
     androidTestImplementation "io.insert-koin:koin-test-junit4:3.4.0"
 
 
-    //Maps & Geofencing
-//    implementation "com.google.android.gms:play-services-location:$playServicesVersion"
-//    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    //Maps & Geofencing: support registering location reminder geofence and getting app notified
     implementation "com.google.android.gms:play-services-maps:$version_maps"
     implementation "com.google.android.gms:play-services-location:$version_location_services"
 
-
+    // Firebase & Firebase Auth to support User Sign-up/Sign-in
+    implementation platform("com.google.firebase:firebase-bom:$version_firebase_bom")
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation "com.firebaseui:firebase-ui-auth:$version_firebase_ui_auth"
 }
