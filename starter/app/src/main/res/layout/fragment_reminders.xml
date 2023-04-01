@@ -27,6 +27,7 @@
                 android:layout_height="match_parent"
                 android:liveData="@{viewModel.remindersList}"
                 app:layout_constraintBottom_toBottomOf="parent"
+                tools:listitem="@layout/it_reminder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

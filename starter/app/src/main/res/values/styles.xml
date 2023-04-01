@@ -16,4 +16,24 @@
         <item name="android:padding">@dimen/padding_large</item>
     </style>
 
+
+    <style name="title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/padding_large</item>
+    </style>
+
+    <style name="reminderFieldTitleStyle">
+        <item name="android:layout_marginTop">@dimen/padding_large</item>
+        <item name="android:layout_marginBottom">@dimen/padding_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="reminderFieldContentsStyle">
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
 </resources>
