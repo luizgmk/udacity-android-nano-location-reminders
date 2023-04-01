@@ -35,10 +35,6 @@ class AuthenticationActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        // TODO: a bonus is to customize the sign in flow to look nice using :
-        //https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
-
-
         // Login button click event
         vm.launchLoginUIEvent.observe(this) {
             // DONE: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google

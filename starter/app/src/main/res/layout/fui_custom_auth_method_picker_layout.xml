@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/top_progress_bar"
+        style="@style/FirebaseUI.TopProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <!-- TODO remove lint ignore once the bug is fixed:
+         https://issuetracker.google.com/issues/38281866-->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#bfbfbf" />
+
+    <LinearLayout
+        android:id="@+id/btn_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/main_tos_and_pp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        tools:background="#bfbfbf">
+
+        <ImageView
+            android:id="@+id/emailSignInButton"
+            android:layout_width="200dip"
+            android:layout_height="64dip"
+            android:src="@drawable/sign_in"
+            tools:background="#bfbfbf" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"/>
+        <ImageView
+            android:id="@+id/googleSignInButton"
+            android:layout_width="200dip"
+            android:layout_height="64dip"
+            android:src="@drawable/sign_in_google"
+            tools:background="#bfbfbf" />
+
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/main_tos_and_pp"
+        style="@style/FirebaseUI.Text.BodyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="@dimen/fui_field_padding_vert"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container"
+        tools:text="@string/tos" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
