@@ -33,6 +33,10 @@
     <string name="welcome">Welcome</string>
     <string name="err_enter_title">Please enter title</string>
     <string name="err_select_location">Please select location</string>
+    <string name="err_invalid_radius">Invalid radius. Please try selecting the reminder location again</string>
+    <string name="geofence_radius_description">Your geofence radius has %s meters</string>
+    <string name="reminder_location_description">Centered at coordinates: %1$.5f, %2$.5f</string>
+    <string name="unknown_location">Unknown Location (coordinates: %1$.5f, %2$.5d)</string>
 
     <!-- Error strings -->
     <string name="geofence_unknown_error">Unknown error: the Geofence service is not available now.</string>

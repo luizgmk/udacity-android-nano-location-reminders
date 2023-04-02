@@ -37,33 +37,43 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reminderTitle" />
 
-        <TextView
-            android:id="@+id/selectLocation"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:drawableStart="@drawable/ic_location"
-            android:drawableLeft="@drawable/ic_location"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:text="@string/reminder_location"
-            android:textColor="@color/black"
+            android:gravity="fill"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reminderDescription" />
+            android:layout_margin="@dimen/margin_normal"
+            app:layout_constraintTop_toBottomOf="@id/reminderDescription">
 
-        <TextView
-            android:id="@+id/selectedLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:layout_marginRight="@dimen/margin_normal"
-            android:text="@{viewModel.reminderSelectedLocationStr}"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@id/selectLocation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/selectLocation"
-            tools:text="Location" />
+            <TextView
+                android:id="@+id/selectLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="@dimen/padding_small"
+                android:gravity="center_vertical"
+                android:text="@string/reminder_location"
+                android:textColor="@color/black"
+                app:drawableLeftCompat="@drawable/ic_location"
+                app:drawableStartCompat="@drawable/ic_location" />
+
+            <TextView
+                android:id="@+id/selectedLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_normal"
+                android:paddingBottom="@dimen/padding_normal"
+                android:text="@{viewModel.reminderSelectedLocationStr}"
+                android:textAlignment="textEnd"
+                android:textColor="@color/black"
+
+                tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged." />
+        </LinearLayout>
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/saveReminder"

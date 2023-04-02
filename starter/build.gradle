@@ -29,7 +29,8 @@ buildscript {
 
         version_gms='4.3.3'
         version_maps='18.1.0'
-        version_location_services='21.0.1'
+        // Beyond 20.0.0 some errors happen...
+        version_location_services='20.0.0'
 
         version_firebase_bom='31.3.0'
         version_firebase_ui_auth='8.0.2'

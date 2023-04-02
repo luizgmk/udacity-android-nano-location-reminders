@@ -18,7 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ReminderListFragment : BaseFragment() {
     //use Koin to retrieve the ViewModel instance
-    override val _viewModel: RemindersListViewModel by viewModel()
+    override val vm: RemindersListViewModel by viewModel()
     private lateinit var binding: FragmentRemindersBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,13 +29,13 @@ class ReminderListFragment : BaseFragment() {
                 inflater,
                 R.layout.fragment_reminders, container, false
             )
-        binding.viewModel = _viewModel
+        binding.viewModel = vm
 
         setDisplayHomeAsUpEnabled(false)
         setTitle(getString(R.string.app_name))
         setupMenu()
 
-        binding.refreshLayout.setOnRefreshListener { _viewModel.loadReminders() }
+        binding.refreshLayout.setOnRefreshListener { vm.loadReminders() }
 
         if (!User.isAuthenticated) User.login(requireActivity())
 
@@ -54,12 +54,12 @@ class ReminderListFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         //load the reminders list on the ui
-        _viewModel.loadReminders()
+        vm.loadReminders()
     }
 
     private fun navigateToAddReminder() {
         //use the navigationCommand live data to navigate between the fragments
-        _viewModel.navigationCommand.postValue(
+        vm.navigationCommand.postValue(
             NavigationCommand.To(
                 ReminderListFragmentDirections.toSaveReminder()
             )
