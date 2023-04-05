@@ -8,6 +8,7 @@ import java.util.*
 /**
  * Immutable model class for a Reminder. In order to compile with Room
  *
+ * @param userUniqueId      unique id of the user owner of the reminder
  * @param title         title of the reminder
  * @param description   description of the reminder
  * @param location      location name of the reminder
@@ -19,6 +20,7 @@ import java.util.*
 
 @Entity(tableName = "reminders")
 data class ReminderDTO(
+    @ColumnInfo(name = "user_uid") var userUniqueId: String,
     @ColumnInfo(name = "title") var title: String?,
     @ColumnInfo(name = "description") var description: String?,
     @ColumnInfo(name = "location") var location: String?,

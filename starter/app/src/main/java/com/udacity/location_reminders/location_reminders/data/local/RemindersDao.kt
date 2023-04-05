@@ -14,15 +14,15 @@ interface RemindersDao {
     /**
      * @return all reminders.
      */
-    @Query("SELECT * FROM reminders")
-    suspend fun getReminders(): List<ReminderDTO>
+    @Query("SELECT * FROM reminders WHERE user_uid = :user_uid")
+    suspend fun getReminders(user_uid: String): List<ReminderDTO>
 
     /**
      * @param reminderId the id of the reminder
      * @return the reminder object with the reminderId
      */
-    @Query("SELECT * FROM reminders where entry_id = :reminderId")
-    suspend fun getReminderById(reminderId: String): ReminderDTO?
+    @Query("SELECT * FROM reminders where entry_id = :reminderId and user_uid = :user_uid")
+    suspend fun getReminderById(reminderId: String, user_uid: String): ReminderDTO?
 
     /**
      * Insert a reminder in the database. If the reminder already exists, replace it.
@@ -35,7 +35,7 @@ interface RemindersDao {
     /**
      * Delete all reminders.
      */
-    @Query("DELETE FROM reminders")
-    suspend fun deleteAllReminders()
+    @Query("DELETE FROM reminders where user_uid = :user_uid")
+    suspend fun deleteAllReminders(user_uid : String)
 
 }

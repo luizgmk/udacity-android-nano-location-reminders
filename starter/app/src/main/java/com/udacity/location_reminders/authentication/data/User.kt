@@ -14,7 +14,14 @@ import com.google.firebase.ktx.Firebase
 import com.udacity.location_reminders.R
 import com.udacity.location_reminders.authentication.AuthenticationActivity
 
+interface UserPlugIn {
+    fun onLogin(user : FirebaseUser)
+    fun onLogout()
+}
+
 object User {
+
+    private val userPlugInList = mutableListOf<UserPlugIn>()
 
     private val auth = Firebase.auth
 
@@ -24,6 +31,22 @@ object User {
 
     val isAuthenticated
         get() = currentUser.value != null
+
+    val userUniqueId
+        get() = internalCurrentUser.value?.uid
+
+    fun registerPlugin(plugin : UserPlugIn) {
+        userPlugInList.add(plugin)
+    }
+
+    fun unregisterPlugin(plugin: UserPlugIn) {
+        userPlugInList.remove(plugin)
+    }
+
+    private fun notifyPlugInMembers(user : FirebaseUser?) {
+        if (user != null) userPlugInList.forEach { it.onLogin(user) }
+        else userPlugInList.forEach { it.onLogout() }
+    }
 
     fun login(owner: FragmentActivity) {
         logout()
@@ -37,6 +60,7 @@ object User {
         if (isAuthenticated) {
             auth.signOut()
             internalCurrentUser.postValue(null)
+            notifyPlugInMembers(null)
         }
     }
 
@@ -66,9 +90,11 @@ object User {
     }
 
     fun onSignInResult(result: FirebaseAuthUIAuthenticationResult?) {
-        if (result?.resultCode == AppCompatActivity.RESULT_OK) {
+        val user = auth.currentUser
+        if (result?.resultCode == AppCompatActivity.RESULT_OK && user != null) {
             // Successfully signed in
-            internalCurrentUser.postValue(User.auth.currentUser)
+            internalCurrentUser.postValue(user)
+            notifyPlugInMembers(user)
         } else {
             // Sign in failed. If response is null the user canceled the
             // Make sure to eliminate any previous user auth

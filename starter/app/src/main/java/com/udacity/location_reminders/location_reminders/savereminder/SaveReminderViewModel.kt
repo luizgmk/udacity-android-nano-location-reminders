@@ -2,7 +2,9 @@ package com.udacity.location_reminders.location_reminders.savereminder
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.google.firebase.auth.FirebaseUser
 import com.udacity.location_reminders.R
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.base.BaseViewModel
 import com.udacity.location_reminders.base.NavigationCommand
 import com.udacity.location_reminders.location_reminders.data.ReminderDataSource
@@ -73,6 +75,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         viewModelScope.launch {
             dataSource.saveReminder(
                 ReminderDTO(
+                    User.userUniqueId!!,
                     reminderData.title,
                     reminderData.description,
                     reminderData.location,
@@ -107,5 +110,13 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             return false
         }
         return true
+    }
+
+    override fun onLoginSuccessful(user : FirebaseUser)  {
+        onClear()
+    }
+
+    override fun onLogoutCompleted() {
+        onClear()
     }
 }

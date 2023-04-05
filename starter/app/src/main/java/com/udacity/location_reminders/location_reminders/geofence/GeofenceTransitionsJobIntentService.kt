@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
 import com.google.android.gms.location.Geofence
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.location_reminders.data.dto.Result
@@ -47,7 +48,8 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
 //        Interaction to the repository has to be through a coroutine scope
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
             //get the reminder with the request id
-            val result = remindersLocalRepository.getReminder(requestId)
+            val userUniqueId = User.userUniqueId ?: return@launch
+            val result = remindersLocalRepository.getReminder(userUniqueId, requestId)
             if (result is Result.Success<ReminderDTO>) {
                 val reminderDTO = result.data
                 //send a notification to the user with the reminder details

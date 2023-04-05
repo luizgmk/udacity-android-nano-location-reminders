@@ -3,6 +3,7 @@ package com.udacity.location_reminders.location_reminders.reminderslist
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
 import com.udacity.location_reminders.base.BaseViewModel
 import com.udacity.location_reminders.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.location_reminders.data.dto.ReminderDTO
@@ -21,10 +22,15 @@ class RemindersListViewModel(
      * or show error if any
      */
     fun loadReminders() {
+        val uid = userUniqueId
+        if (uid == null) {
+            remindersList.value = listOf()
+            return
+        }
         showLoading.value = true
         viewModelScope.launch {
             //interacting with the dataSource has to be through a coroutine
-            val result = dataSource.getReminders()
+            val result = dataSource.getReminders(uid)
             showLoading.postValue(false)
             when (result) {
                 is Result.Success<*> -> {
@@ -57,5 +63,15 @@ class RemindersListViewModel(
      */
     private fun invalidateShowNoData() {
         showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
+    }
+
+    override fun onLoginSuccessful(user : FirebaseUser) {
+        super.onLoginSuccessful(user)
+        loadReminders()
+    }
+
+    override fun onLogoutCompleted() {
+        super.onLogoutCompleted()
+        loadReminders()
     }
 }

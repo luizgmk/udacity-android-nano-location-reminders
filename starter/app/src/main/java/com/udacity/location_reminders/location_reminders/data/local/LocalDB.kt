@@ -14,7 +14,7 @@ object LocalDB {
      */
     fun createRemindersDao(context: Context): RemindersDao {
         // CHEAT: No migration for schema changes, just delete all and create from scratch..
-        // context.deleteDatabase("locationReminders.db")
+//         context.deleteDatabase("locationReminders.db")
         return Room.databaseBuilder(
             context.applicationContext,
             RemindersDatabase::class.java, "locationReminders.db"
