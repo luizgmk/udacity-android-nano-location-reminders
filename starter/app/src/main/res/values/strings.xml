@@ -29,12 +29,14 @@
     <string name="content_text">Location Reminder</string>
     <string name="select_title">Please select title</string>
     <string name="select_location">Please select location</string>
+    <string name="no_location_selected">No location selected</string>
     <string name="geofences_not_added">Problem in adding geofences.</string>
     <string name="welcome">Welcome</string>
     <string name="err_enter_title">Please enter title</string>
     <string name="err_select_location">Please select location</string>
     <string name="err_invalid_radius">Invalid radius. Please try selecting the reminder location again</string>
     <string name="geofence_radius_description">Your geofence radius has %s meters</string>
+    <string name="geofence_location_description">Within %sm from %s</string>
     <string name="reminder_location_description">Centered at coordinates: %1$.5f, %2$.5f</string>
     <string name="unknown_location">Unknown Location (coordinates: %1$.5f, %2$.5d)</string>
 

@@ -31,6 +31,7 @@ abstract class BaseViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         User.registerPlugin(registration)
+        userUniqueId = User.userUniqueId
     }
 
     override fun onCleared() {

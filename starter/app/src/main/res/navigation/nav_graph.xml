@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_saveReminderFragment_to_selectLocationFragment"
             app:destination="@id/selectLocationFragment" />
+        <argument
+            android:name="reminder"
+            app:argType="com.udacity.location_reminders.location_reminders.reminderslist.ReminderDataItem" />
     </fragment>
     <fragment
         android:id="@+id/selectLocationFragment"

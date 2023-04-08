@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="vm"
             type="com.udacity.location_reminders.location_reminders.savereminder.SaveReminderViewModel" />
     </data>
 
@@ -40,7 +40,7 @@
                 android:id="@+id/placeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.newSelectedLocationStr}"
+                android:text="@{vm.locationReminder.location}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_normal"
                 android:textStyle="bold"
@@ -55,7 +55,7 @@
                 android:layout_margin="@dimen/padding_small"
                 android:max="300"
                 android:min="10"
-                android:progress="@={viewModel.newRoundGeofenceRadius}"
+                android:progress="@={vm.roundGeofenceRadiusSelection}"
                 app:layout_constraintBottom_toTopOf="@id/radiusExplanation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/padding_normal"
-                android:text="@{@string/geofence_radius_description(viewModel.newRoundGeofenceRadius)}"
+                android:text="@{@string/geofence_radius_description(vm.roundGeofenceRadiusSelection)}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_normal"
                 android:textStyle="bold"
@@ -81,7 +81,7 @@
                 style="@style/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.saveLocation()}"
+                android:onClick="@{() -> vm.saveLocation()}"
                 android:text="@string/save"
 
                 app:layout_constraintBottom_toBottomOf="parent" />

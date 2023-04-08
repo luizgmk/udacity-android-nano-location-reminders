@@ -21,13 +21,21 @@ class SaveReminderFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_save_reminder, container, false)
 
         setDisplayHomeAsUpEnabled(true)
 
-        binding.viewModel = vm
+        binding.vm = vm
+
+        // When back from location selection, parameter is kept but view model is not null
+        // and should not be overridden
+        if (vm.reminder.value == null) {
+            // Load reminder from navigation parameter if available
+            val reminder = SaveReminderFragmentArgs.fromBundle(requireArguments()).reminder
+            vm.editReminder(reminder)
+        }
 
         return binding.root
     }
@@ -36,25 +44,17 @@ class SaveReminderFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         binding.selectLocation.setOnClickListener {
-            //            Navigate to another fragment to get the user location
+            // Navigate to another fragment to get the user location
             vm.navigationCommand.value =
                 NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
         }
 
         binding.saveReminder.setOnClickListener {
-            val reminder = ReminderDataItem(
-                title = vm.reminderTitle.value,
-                description = vm.reminderDescription.value,
-                location = vm.reminderSelectedLocationStr.value,
-                latitude = vm.reminderLatitude.value,
-                longitude = vm.reminderLongitude.value,
-                radius = vm.reminderRoundGeofenceRadius.value
-            )
-            vm.validateAndSaveReminder(reminder)
+            vm.validateAndSaveReminder()
 
 //            TODO: use the user entered reminder details to:
 //             1) add a geofencing request
-//             2) save the reminder to the local db
+//             DONE 2) save the reminder to the local db
         }
     }
 

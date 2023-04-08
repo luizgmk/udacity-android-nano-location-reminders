@@ -32,9 +32,9 @@ class GoogleMapHelper(private val fragment: Fragment) : OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    fun updateGeofenceRadius(newRadius: Double) {
+    fun updateGeofenceRadius(newRadius: Int?) {
         currentGeofenceCircle?.let {
-            it.radius = newRadius
+            it.radius = newRadius?.toDouble() ?: Constants.DEFAULT_ROUND_GEOFENCE_RADIUS.toDouble()
         }
     }
 

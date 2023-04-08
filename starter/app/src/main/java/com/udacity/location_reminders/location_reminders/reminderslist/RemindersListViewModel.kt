@@ -25,6 +25,7 @@ class RemindersListViewModel(
         val uid = userUniqueId
         if (uid == null) {
             remindersList.value = listOf()
+            invalidateShowNoData()
             return
         }
         showLoading.value = true
@@ -38,6 +39,7 @@ class RemindersListViewModel(
                     dataList.addAll((result.data as List<ReminderDTO>).map { reminder ->
                         //map the reminder data from the DB to the be ready to be displayed on the UI
                         ReminderDataItem(
+                            reminder.userUniqueId,
                             reminder.title,
                             reminder.description,
                             reminder.location,

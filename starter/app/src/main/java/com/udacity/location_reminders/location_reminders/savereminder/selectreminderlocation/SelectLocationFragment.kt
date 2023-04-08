@@ -34,7 +34,7 @@ class SelectLocationFragment : BaseFragment() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_select_location, container, false)
 
-        binding.viewModel = vm
+        binding.vm = vm
         binding.lifecycleOwner = this
 
         setupMenu()
@@ -50,14 +50,14 @@ class SelectLocationFragment : BaseFragment() {
                 setPoiClickListener(this.getMap())
 
                 // Restore to map the current geofence marker
-                if (vm.reminderLongitude.value != null
-                    && vm.reminderLatitude.value != null
-                ) {
+                val longitude = vm.locationReminder.value?.longitude
+                val latitude = vm.locationReminder.value?.latitude
+                val location = vm.locationReminder.value?.location
+                if (longitude != null && latitude != null) {
                     addMarker(
-                        LatLng(vm.reminderLatitude.value!!, vm.reminderLongitude.value!!),
-                        vm.reminderSelectedLocationStr.value
+                        LatLng(latitude, longitude),
+                        location
                     )
-                    vm.newRoundGeofenceRadius.postValue(vm.reminderRoundGeofenceRadius.value)
                 }
             }
         }
@@ -68,10 +68,12 @@ class SelectLocationFragment : BaseFragment() {
 
     private fun setObservers() {
         mapHelper.currentPlaceName.distinctUntilChanged().observe(viewLifecycleOwner) {
-            vm.newSelectedLocationStr.postValue(it)
+            val locationReminder = vm.locationReminder.value
+            locationReminder?.location = it
+            vm.locationReminder.postValue(locationReminder)
         }
-        vm.newRoundGeofenceRadius.observe(viewLifecycleOwner) {
-            mapHelper.updateGeofenceRadius(it.toDouble())
+        vm.roundGeofenceRadiusSelection.observe(viewLifecycleOwner) {
+            mapHelper.updateGeofenceRadius(it)
         }
         vm.locationSaved.observe(viewLifecycleOwner) {
             // DONE: call this function after the user confirms on the selected location
@@ -84,12 +86,19 @@ class SelectLocationFragment : BaseFragment() {
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
 
+        val latitude = vm.locationReminder.value?.latitude
+        val longitude = vm.locationReminder.value?.longitude
+        val location = vm.locationReminder.value?.location
+        val radius = vm.roundGeofenceRadiusSelection.value
+        if (latitude!= null && longitude!= null) {
+            val reminder = vm.reminder.value!!
 
-        if (vm.newLatitude.value != null && vm.newLongitude.value != null) {
-            vm.reminderLatitude.postValue(vm.newLatitude.value)
-            vm.reminderLongitude.postValue(vm.newLongitude.value)
-            vm.reminderSelectedLocationStr.postValue(vm.newSelectedLocationStr.value)
-            vm.reminderRoundGeofenceRadius.postValue(vm.newRoundGeofenceRadius.value)
+            reminder.longitude = longitude
+            reminder.latitude = latitude
+            reminder.location = location
+            reminder.radius = radius
+
+            vm.reminder.postValue(reminder)
         }
 
         vm.navigationCommand.value = NavigationCommand.Back
@@ -141,8 +150,11 @@ class SelectLocationFragment : BaseFragment() {
     }
 
     private fun addMarker(position: LatLng, locationName: String? = null) {
-        vm.newLatitude.postValue(position.latitude)
-        vm.newLongitude.postValue(position.longitude)
+        val reminder = vm.locationReminder.value ?: return
+        reminder.location = locationName
+        reminder.longitude = position.longitude // offline or GPS
+        reminder.latitude = position.latitude // offline or GPS
+        vm.locationReminder.postValue(reminder)
 
         val marker = mapHelper.addMarker(
             name = locationName,
@@ -158,7 +170,7 @@ class SelectLocationFragment : BaseFragment() {
                 )
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)),
             temporary = true,
-            roundGeofenceRadius = vm.newRoundGeofenceRadius.value?.toDouble() ?: 100.0
+            roundGeofenceRadius = vm.locationReminder.value?.radius?.toDouble() ?: 100.0
         )
         mapHelper.moveCameraToLocation(position)
         marker?.showInfoWindow()

@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="vm"
             type="com.udacity.location_reminders.location_reminders.savereminder.SaveReminderViewModel" />
     </data>
 
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/reminder_title"
-            android:text="@={viewModel.reminderTitle}"
+            android:text="@={vm.reminder.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
             android:gravity="start"
             android:hint="@string/reminder_desc"
             android:lines="10"
-            android:text="@={viewModel.reminderDescription}"
+            android:text="@={vm.reminder.description}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reminderTitle" />
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/padding_normal"
                 android:paddingBottom="@dimen/padding_normal"
-                android:text="@{viewModel.reminderSelectedLocationStr}"
+                android:text="@{vm.geofenceLocationDescription}"
                 android:textAlignment="textEnd"
                 android:textColor="@color/black"
 
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_normal"
-            android:fadeVisible="@{!viewModel.showLoading.booleanValue()}"
+            android:fadeVisible="@{!vm.showLoading.booleanValue()}"
             android:src="@drawable/ic_save"
             app:fabSize="normal"
             app:layout_anchorGravity="bottom|right|end"
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fadeVisible="@{viewModel.showLoading.booleanValue()}"
+            android:fadeVisible="@{vm.showLoading.booleanValue()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

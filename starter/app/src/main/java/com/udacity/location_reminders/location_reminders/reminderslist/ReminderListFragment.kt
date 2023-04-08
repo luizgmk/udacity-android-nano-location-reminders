@@ -23,7 +23,7 @@ class ReminderListFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding =
             DataBindingUtil.inflate(
                 inflater,
@@ -47,7 +47,7 @@ class ReminderListFragment : BaseFragment() {
         binding.lifecycleOwner = this
         setupRecyclerView()
         binding.addReminderFAB.setOnClickListener {
-            navigateToAddReminder()
+            navigateToAddReminder(ReminderDataItem.getNewEmptyReminder(vm.userUniqueId!!))
         }
     }
 
@@ -57,17 +57,18 @@ class ReminderListFragment : BaseFragment() {
         vm.loadReminders()
     }
 
-    private fun navigateToAddReminder() {
+    private fun navigateToAddReminder(reminder : ReminderDataItem) {
         //use the navigationCommand live data to navigate between the fragments
         vm.navigationCommand.postValue(
             NavigationCommand.To(
-                ReminderListFragmentDirections.toSaveReminder()
+                ReminderListFragmentDirections.toSaveReminder(reminder)
             )
         )
     }
 
     private fun setupRecyclerView() {
         val adapter = RemindersListAdapter {
+            navigateToAddReminder(it)
         }
 
 //        setup the recycler view using the extension function
