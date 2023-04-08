@@ -14,10 +14,9 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <!-- TODO remove lint ignore once the bug is fixed:
-         https://issuetracker.google.com/issues/38281866-->
     <ImageView
         android:id="@+id/logo"
+        android:contentDescription="@string/illustrative_treasure_hunt_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/map"
@@ -40,6 +39,7 @@
 
         <ImageView
             android:id="@+id/emailSignInButton"
+            android:contentDescription="@string/sign_in"
             android:layout_width="200dip"
             android:layout_height="64dip"
             android:src="@drawable/sign_in"
@@ -49,15 +49,12 @@
             android:layout_height="16dp"/>
         <ImageView
             android:id="@+id/googleSignInButton"
+            android:contentDescription="@string/sign_in_with_google"
             android:layout_width="200dip"
             android:layout_height="64dip"
             android:src="@drawable/sign_in_google"
             tools:background="#bfbfbf" />
-
-
-
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/main_tos_and_pp"
@@ -75,7 +72,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/container"
-        tools:text="@string/tos" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_holder"
+        android:text="@string/tos" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

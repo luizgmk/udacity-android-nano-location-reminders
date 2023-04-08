@@ -47,4 +47,7 @@
     <string name="geofence_too_many_pending_intents">You have provided too many PendingIntents to the addGeofences() call.</string>
     <string name="error_adding_geofence">Error Happened, Can\'t Add Geofence</string>
     <string name="tos">By continuing you are indicating that you accept our Terms of Service and Privacy Policy</string>
+    <string name="illustrative_treasure_hunt_map">Illustrative treasure hunt map</string>
+    <string name="sign_in">Sign-in</string>
+    <string name="sign_in_with_google">Sign-in with Google</string>
 </resources>
