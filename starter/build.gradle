@@ -24,7 +24,7 @@ buildscript {
         version_expresso_core = '3.5.1'
         version_hamcrest = '2.2'
 
-        version_timber = '1.0.0'
+        version_timber = '5.0.1'
         version_cardview = '1.0.0'
 
         version_gms='4.3.3'

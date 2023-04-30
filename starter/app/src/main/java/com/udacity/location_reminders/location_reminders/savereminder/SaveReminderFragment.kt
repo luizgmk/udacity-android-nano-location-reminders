@@ -9,7 +9,8 @@ import com.udacity.location_reminders.R
 import com.udacity.location_reminders.base.BaseFragment
 import com.udacity.location_reminders.base.NavigationCommand
 import com.udacity.location_reminders.databinding.FragmentSaveReminderBinding
-import com.udacity.location_reminders.location_reminders.reminderslist.ReminderDataItem
+import com.udacity.location_reminders.utils.GeofencingHelper
+import com.udacity.location_reminders.utils.Log
 import com.udacity.location_reminders.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
@@ -17,6 +18,8 @@ class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
     override val vm: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
+    private val geofencingHelper = GeofencingHelper(this)
+    private val log = Log("SaveReminderFragment")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +40,15 @@ class SaveReminderFragment : BaseFragment() {
             vm.editReminder(reminder)
         }
 
+        // Prepare for Geofencing request
+        GeofencingHelper.requestPermissions(this)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.selectLocation.setOnClickListener {
             // Navigate to another fragment to get the user location
             vm.navigationCommand.value =
@@ -50,11 +56,26 @@ class SaveReminderFragment : BaseFragment() {
         }
 
         binding.saveReminder.setOnClickListener {
-            vm.validateAndSaveReminder()
+            val reminder = vm.reminder.value ?: return@setOnClickListener
+            if (!vm.validateEnteredData(reminder)) return@setOnClickListener
 
-//            TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             DONE 2) save the reminder to the local db
+            if (!GeofencingHelper.permissionsGranted) {
+                // vm.showToast.value = getString(R.string.err_not_possible_to_save)
+                vm.showToast.value = getString(R.string.permission_denied_explanation)
+                return@setOnClickListener
+            }
+            // DONE: use the user entered reminder details to:
+            // 1) add a geofencing request
+            geofencingHelper.processRemindersGeofences(listOf(reminder),
+                onSuccess = {
+                    // DONE 2) save the reminder to the local db
+                    vm.saveReminder(reminder)
+                },
+                onFailure = {
+                    vm.showToast.value = it
+                    log.e("Error trying to save a reminder \"${it}\"")
+                }
+            )
         }
     }
 

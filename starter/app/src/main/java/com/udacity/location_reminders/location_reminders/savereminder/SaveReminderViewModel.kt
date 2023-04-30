@@ -13,7 +13,10 @@ import com.udacity.location_reminders.utils.Constants
 import com.udacity.location_reminders.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
-class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
+class SaveReminderViewModel(
+    private val app: Application,
+    private val dataSource: ReminderDataSource
+) :
     BaseViewModel(app) {
 
     val reminder = MutableLiveData<ReminderDataItem?>()
@@ -29,15 +32,18 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         this.roundGeofenceRadiusSelection.postValue(reminder.radius)
     }
 
-    val geofenceLocationDescription: String
-        get() = if (reminder.value?.location.isNullOrEmpty())
-            app.getString(R.string.no_location_selected)
-        else
-            app.getString(
-                R.string.geofence_location_description,
-                reminder.value?.radius.toString(),
-                reminder.value?.location
-            )
+    val geofenceLocationDescription: LiveData<String>
+        get() = reminder.map {
+            if (it?.location.isNullOrEmpty())
+                app.getString(R.string.no_location_selected)
+            else
+                app.getString(
+                    R.string.geofence_location_description,
+                    it?.radius.toString(),
+                    it?.location
+                )
+        }
+
 
     fun saveLocation() {
         if (locationReminder.value?.location.isNullOrEmpty()) {
@@ -53,16 +59,6 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     fun onClear() {
         reminder.postValue(null)
         locationReminder.postValue(ReminderDataItem.getNewEmptyReminder(userUniqueId!!))
-    }
-
-    /**
-     * Validate the entered data then saves the reminder data to the DataSource
-     */
-    fun validateAndSaveReminder() {
-        val reminderData = reminder.value ?: return
-        if (validateEnteredData(reminderData)) {
-            saveReminder(reminderData)
-        }
     }
 
     /**
@@ -92,7 +88,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     /**
      * Validate the entered data and show error to the user if there's any invalid data
      */
-    private fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
+    fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
         if (reminderData.userUniqueId.isNullOrEmpty()
             || reminderData.userUniqueId != userUniqueId
         ) {

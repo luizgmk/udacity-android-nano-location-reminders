@@ -12,9 +12,11 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.udacity.location_reminders.R
+import java.util.*
 
 
 class GoogleMapHelper(private val fragment: Fragment) : OnMapReadyCallback {
+    private val log = Log("GoogleMapHelper")
 
     private lateinit var map: GoogleMap
     private val activity: Activity
@@ -59,6 +61,12 @@ class GoogleMapHelper(private val fragment: Fragment) : OnMapReadyCallback {
         var currentProvider = locationManager.getBestProvider(Criteria(), true) ?: providers[0]
 
         while (providers.size > 0) {
+            // prefer GPS if not already taken, then test other providers
+            currentProvider = if (providers.contains("gps")) {
+                "gps"
+            } else {
+                providers[0]
+            }
             if (locationManager.isProviderEnabled(currentProvider)) {
                 val lastKnownLocation = locationManager.getLastKnownLocation(currentProvider)
                 if (lastKnownLocation != null) {
@@ -66,13 +74,6 @@ class GoogleMapHelper(private val fragment: Fragment) : OnMapReadyCallback {
                 }
             }
             providers.remove(currentProvider)
-
-            // prefer GPS if not already taken, then test other providers
-            currentProvider = if (providers.contains("gps")) {
-                "gps"
-            } else {
-                providers[0]
-            }
         }
         return null
     }
@@ -140,12 +141,17 @@ class GoogleMapHelper(private val fragment: Fragment) : OnMapReadyCallback {
     private fun findCurrentPlaceName(position: LatLng) {
         var place: String? = null
 
-        val addresses = geocoder.getFromLocation(position.latitude, position.longitude, 1)
-        addresses?.let {
-            if (it.isNotEmpty()) {
-                val address = it.first()
-                place = address.getAddressLine(address.maxAddressLineIndex)
+        try {
+            // getFromLocation is deprecated, but the alternative requires API level 33, so keeping
+            val addresses = geocoder.getFromLocation(position.latitude, position.longitude, 1)
+            addresses?.let {
+                if (it.isNotEmpty()) {
+                    val address = it.first()
+                    place = address.getAddressLine(address.maxAddressLineIndex)
+                }
             }
+        } catch (e : Exception) {
+            log.e("Geocoder raised the error \"${e.message}\"")
         }
 
         currentPlaceName.postValue(

@@ -15,12 +15,12 @@ import com.udacity.location_reminders.location_reminders.reminderslist.ReminderD
 class ReminderDescriptionActivity : AppCompatActivity() {
 
     companion object {
-        private const val EXTRA_ReminderDataItem = "EXTRA_ReminderDataItem"
+        private const val EXTRA_REMINDER_DATA_ITEM_KEY = "EXTRA_ReminderDataItem"
 
         //        receive the reminder object after the user clicks on the notification
         fun newIntent(context: Context, reminderDataItem: ReminderDataItem): Intent {
             val intent = Intent(context, ReminderDescriptionActivity::class.java)
-            intent.putExtra(EXTRA_ReminderDataItem, reminderDataItem)
+            intent.putExtra(EXTRA_REMINDER_DATA_ITEM_KEY, reminderDataItem)
             return intent
         }
     }

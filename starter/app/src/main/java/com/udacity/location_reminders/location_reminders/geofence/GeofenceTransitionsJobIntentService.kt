@@ -9,12 +9,15 @@ import com.udacity.location_reminders.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.location_reminders.data.dto.Result
 import com.udacity.location_reminders.location_reminders.reminderslist.ReminderDataItem
+import com.udacity.location_reminders.utils.Log
 import com.udacity.location_reminders.utils.sendNotification
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import kotlin.coroutines.CoroutineContext
 
 class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
+
+    private val log = Log("GeofenceTransitionsJobIntentService")
 
     private var coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -37,6 +40,8 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         //TODO: handle the geofencing transition events and
         // send a notification to the user when he enters the geofence area
         //TODO call @sendNotification
+
+        log.i("Received intent \"${intent.action}\" with ${intent.extras?.size()} extras")
     }
 
     //TODO: get the request id of the current geofence
