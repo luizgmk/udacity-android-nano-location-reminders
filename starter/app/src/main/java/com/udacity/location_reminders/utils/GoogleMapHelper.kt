@@ -58,7 +58,7 @@ class GoogleMapHelper(private val fragment: Fragment) : OnMapReadyCallback {
         if (!permissionsGranted) return null
         val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val providers = locationManager.allProviders
-        var currentProvider = locationManager.getBestProvider(Criteria(), true) ?: providers[0]
+        var currentProvider : String
 
         while (providers.size > 0) {
             // prefer GPS if not already taken, then test other providers
@@ -143,6 +143,7 @@ class GoogleMapHelper(private val fragment: Fragment) : OnMapReadyCallback {
 
         try {
             // getFromLocation is deprecated, but the alternative requires API level 33, so keeping
+            @Suppress("DEPRECATION")
             val addresses = geocoder.getFromLocation(position.latitude, position.longitude, 1)
             addresses?.let {
                 if (it.isNotEmpty()) {

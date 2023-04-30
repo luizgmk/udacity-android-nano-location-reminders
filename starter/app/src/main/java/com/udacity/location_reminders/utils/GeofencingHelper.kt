@@ -14,8 +14,8 @@ import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.udacity.location_reminders.R
-import com.udacity.location_reminders.location_reminders.geofence.GeofenceBroadcastReceiver
-import com.udacity.location_reminders.location_reminders.reminderslist.ReminderDataItem
+import com.udacity.location_reminders.broadcast.GeofenceBroadcastReceiver
+import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
 import kotlinx.coroutines.sync.Mutex
 import java.util.*
 

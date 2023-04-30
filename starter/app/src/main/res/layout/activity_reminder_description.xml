@@ -7,13 +7,13 @@
         <!--Data item that holds the reminder details-->
         <variable
             name="reminderDataItem"
-            type="com.udacity.location_reminders.location_reminders.reminderslist.ReminderDataItem" />
+            type="com.udacity.location_reminders.view.reminders_list.ReminderDataItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".location_reminders.ReminderDescriptionActivity">
+        tools:context=".view.ReminderDescriptionActivity">
         <!--DONE: add the design of the reminder details-->
 
         <TextView

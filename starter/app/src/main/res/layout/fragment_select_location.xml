@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.udacity.location_reminders.location_reminders.savereminder.SaveReminderViewModel" />
+            type="com.udacity.location_reminders.view.save_reminder.SaveReminderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

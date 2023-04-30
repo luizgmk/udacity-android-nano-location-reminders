@@ -8,7 +8,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.udacity.location_reminders.R
 import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.databinding.ActivityAuthenticationBinding
-import com.udacity.location_reminders.location_reminders.RemindersActivity
+import com.udacity.location_reminders.view.RemindersActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**

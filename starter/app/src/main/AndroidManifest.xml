@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".location_reminders.ReminderDescriptionActivity"
+            android:name=".view.ReminderDescriptionActivity"
             android:exported="true" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -41,7 +41,7 @@
             android:clearTaskOnLaunch="true"
             android:exported="true" />
         <activity
-            android:name=".location_reminders.RemindersActivity"
+            android:name=".view.RemindersActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,13 +52,9 @@
         </activity>
 
         <receiver
-            android:name=".location_reminders.geofence.GeofenceBroadcastReceiver"
+            android:name=".broadcast.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".location_reminders.geofence.GeofenceTransitionsJobIntentService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

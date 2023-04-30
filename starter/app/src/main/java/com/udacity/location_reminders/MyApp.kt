@@ -2,11 +2,11 @@ package com.udacity.location_reminders
 
 import android.app.Application
 import com.udacity.location_reminders.authentication.AuthenticationViewModel
-import com.udacity.location_reminders.location_reminders.data.ReminderDataSource
-import com.udacity.location_reminders.location_reminders.data.local.LocalDB
-import com.udacity.location_reminders.location_reminders.data.local.RemindersLocalRepository
-import com.udacity.location_reminders.location_reminders.reminderslist.RemindersListViewModel
-import com.udacity.location_reminders.location_reminders.savereminder.SaveReminderViewModel
+import com.udacity.location_reminders.data.ReminderDataSource
+import com.udacity.location_reminders.data.local.LocalDB
+import com.udacity.location_reminders.data.local.RemindersLocalRepository
+import com.udacity.location_reminders.view.reminders_list.RemindersListViewModel
+import com.udacity.location_reminders.view.save_reminder.SaveReminderViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -18,7 +18,7 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree());
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         /**
          * use Koin Library as a service locator
@@ -42,7 +42,7 @@ class MyApp : Application() {
                     get() as ReminderDataSource
                 )
             }
-            single { RemindersLocalRepository(get()) as ReminderDataSource }
+            single<ReminderDataSource> { RemindersLocalRepository(get()) }
             single { LocalDB.createRemindersDao(this@MyApp) }
         }
 
