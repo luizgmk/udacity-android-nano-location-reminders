@@ -133,12 +133,9 @@ class GeofencingHelper(fragment: Fragment) {
     private fun buildGeofencePendingIntent(reminder: ReminderDataItem): PendingIntent {
         val activity = fragment.requireActivity()
         val intent = Intent(activity, GeofenceBroadcastReceiver::class.java)
+
         intent.putExtra(INTENT_EXTRA_REMINDER_KEY, reminder)
-//        intent.putExtra(INTENT_EXTRA_USER_ID, reminder.userUniqueId)
-//        intent.putExtra(INTENT_EXTRA_REMINDER_ID, reminder.id)
-//        intent.putExtra(INTENT_EXTRA_REMINDER_TITLE, reminder.title)
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
-        // addGeofences() and removeGeofences().
+
         return PendingIntent.getBroadcast(
             activity.applicationContext,
             0,
