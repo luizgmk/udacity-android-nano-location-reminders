@@ -3,15 +3,34 @@ package com.udacity.location_reminders.broadcast
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
+import android.os.StrictMode.VmPolicy
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
-import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.utils.GeofencingHelper
 import com.udacity.location_reminders.utils.sendNotification
+import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     private val log = com.udacity.location_reminders.utils.Log("GeofenceBroadcastReceiver")
+
+    init {
+        StrictMode.setThreadPolicy(
+            ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+        )
+        StrictMode.setVmPolicy(
+            VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+        )
+    }
 
     // DONE: implement the onReceive method to receive the geofencing events
     override fun onReceive(context: Context, intent: Intent) {
@@ -26,7 +45,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 log.e("reminder's key properties were not available")
                 return
             }
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             log.e("error parsing reminder data (message: \"${e.message}\")")
             return
         }
@@ -62,6 +81,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         //DONE: handle the geofencing transition events and
         // send a notification to the user when he enters the geofence area
         //DONE: call @sendNotification
-        sendNotification(context, reminder)
+        if (reminder.userUniqueId == User.userUniqueId) {
+            log.i("Notifying reminder title \"${reminder.title}\"")
+            sendNotification(context, reminder)
+        } else log.w(
+            "Skipping geofence notification of title " +
+                    "\"${reminder.title}\" due to a different user is logged in."
+        )
     }
 }

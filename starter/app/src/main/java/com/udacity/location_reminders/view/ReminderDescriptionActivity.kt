@@ -6,7 +6,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.udacity.location_reminders.R
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.databinding.ActivityReminderDescriptionBinding
+import com.udacity.location_reminders.utils.Log
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
 
 /**
@@ -16,6 +18,7 @@ class ReminderDescriptionActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_REMINDER_DATA_ITEM_KEY = "EXTRA_ReminderDataItem"
+        private val log = Log("ReminderDescriptionActivity")
 
         //        receive the reminder object after the user clicks on the notification
         fun newIntent(context: Context, reminderDataItem: ReminderDataItem): Intent {
@@ -32,6 +35,24 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             this,
             R.layout.activity_reminder_description
         )
-//        TODO: Add the implementation of the reminder details
+
+        // DONE: Add the implementation of the reminder details
+        val reminder : ReminderDataItem
+        try {
+            // User getParcelable due to replacement won't work with Android Q
+            @Suppress("DEPRECATION")
+            reminder = intent.extras!!.getParcelable(EXTRA_REMINDER_DATA_ITEM_KEY)!!
+            log.i("Recovered reminder data from notification of title \"${reminder.title}\"")
+        } catch (e: Exception) {
+            log.e("Error parsing or obtaining reminder data")
+            return
+        }
+        if (reminder.userUniqueId != User.userUniqueId) {
+            log.w("Reminder notification is not from the current user. Aborting.")
+            finish()
+        } else {
+            // Display reminder details
+            binding.reminderDataItem = reminder
+        }
     }
 }

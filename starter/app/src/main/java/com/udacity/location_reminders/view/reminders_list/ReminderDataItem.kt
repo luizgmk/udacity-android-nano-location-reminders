@@ -2,6 +2,7 @@ package com.udacity.location_reminders.view.reminders_list
 
 import android.os.Parcelable
 import com.udacity.location_reminders.utils.Constants
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -30,4 +31,5 @@ data class ReminderDataItem(
             radius = Constants.DEFAULT_ROUND_GEOFENCE_RADIUS
         )
     }
+    fun getGlobalyUniqueId() = "${userUniqueId}/${id}"
 }

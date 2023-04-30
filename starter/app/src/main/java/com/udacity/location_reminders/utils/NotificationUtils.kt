@@ -11,6 +11,7 @@ import com.udacity.location_reminders.BuildConfig
 import com.udacity.location_reminders.R
 import com.udacity.location_reminders.view.ReminderDescriptionActivity
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
+import timber.log.Timber
 
 private const val NOTIFICATION_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel"
 
@@ -19,17 +20,7 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     // We need to create a NotificationChannel associated with our CHANNEL_ID before sending a notification.
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-        && notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null
-    ) {
-        val name = context.getString(R.string.app_name)
-        val channel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            name,
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        notificationManager.createNotificationChannel(channel)
-    }
+    createNotificationChannel(notificationManager, context)
 
     val intent = ReminderDescriptionActivity.newIntent(context.applicationContext, reminderDataItem)
 
@@ -37,8 +28,18 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
     val stackBuilder = TaskStackBuilder.create(context)
         .addParentStack(ReminderDescriptionActivity::class.java)
         .addNextIntent(intent)
+
+    val pendingIntentNotificationId =
+        "${reminderDataItem.getGlobalyUniqueId()}#pending-intent".hashCode()
+    Timber.i(
+        "NotId :: Reminder title \"${reminderDataItem.title}\" :: " +
+                "Notification id $pendingIntentNotificationId"
+    )
     val notificationPendingIntent = stackBuilder
-        .getPendingIntent(getUniqueId(), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        .getPendingIntent(
+            pendingIntentNotificationId,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
 //    build the notification object with the data to be shown
     val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
@@ -49,7 +50,24 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         .setAutoCancel(true)
         .build()
 
-    notificationManager.notify(getUniqueId(), notification)
+    Timber.i(
+        "NotId :: Reminder title \"${reminderDataItem.title}\" :: " +
+                "Notification id ${reminderDataItem.getGlobalyUniqueId().hashCode()}"
+    )
+    notificationManager.notify(reminderDataItem.getGlobalyUniqueId().hashCode(), notification)
 }
 
-private fun getUniqueId() = ((System.currentTimeMillis() % 10000).toInt())
+private fun createNotificationChannel(
+    notificationManager: NotificationManager,
+    context: Context
+) {
+    if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
+        val name = context.getString(R.string.app_name)
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            name,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
+    }
+}

@@ -146,7 +146,6 @@ class GeofencingHelper(fragment: Fragment) {
 
     private fun reminderToGeofence(reminder : ReminderDataItem) : Geofence? {
         if (reminder.userUniqueId == null) return null
-        val id = "${reminder.userUniqueId}/${reminder.id}"
         val longitude = reminder.longitude ?: return null
         val latitude = reminder.latitude ?: return null
         val radius = reminder.radius?.toFloat() ?: return null
@@ -154,7 +153,7 @@ class GeofencingHelper(fragment: Fragment) {
         return Geofence.Builder()
             // Set the request ID of the geofence. This is a string to identify this
             // geofence.
-            .setRequestId(id)
+            .setRequestId(reminder.getGlobalyUniqueId())
             // Set the circular region of this geofence.
             .setCircularRegion(latitude, longitude, radius)
             // Never expiring
