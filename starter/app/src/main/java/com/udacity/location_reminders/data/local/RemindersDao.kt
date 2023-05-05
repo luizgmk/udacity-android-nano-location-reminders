@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.udacity.location_reminders.data.dto.ReminderDTO
+import org.jetbrains.annotations.TestOnly
 
 /**
  * Data Access Object for the reminders table.
@@ -37,5 +38,13 @@ interface RemindersDao {
      */
     @Query("DELETE FROM reminders where user_uid = :user_uid")
     suspend fun deleteAllReminders(user_uid : String)
+
+    /**
+     * FOR TESTING
+     * Count reminders in DB.
+     */
+    @TestOnly
+    @Query("SELECT count(1) FROM reminders")
+    suspend fun countRemindersAllUsers() : Int
 
 }

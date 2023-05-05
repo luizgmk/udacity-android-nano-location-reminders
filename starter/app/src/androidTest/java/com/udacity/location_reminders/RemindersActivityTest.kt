@@ -61,7 +61,7 @@ class RemindersActivityTest :
 
         //clear the data to start fresh
         runBlocking {
-            repository.deleteAllReminders()
+            repository.deleteAllReminders("userUniqueId#1")
         }
     }
 
