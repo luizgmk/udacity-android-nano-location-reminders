@@ -52,7 +52,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             return
         }
 
-        // TODO::Save location back button implementation
         // Intents are not consistently returning as a GeofencingEvent from GMS. To address that,
         // we send the notification even if Intent is not a GeofenceEvent, as long as the reminder
         // information can be recovered. At this moment, the Geofence request registers only
