@@ -82,6 +82,7 @@ class GeofencingHelper(fragment: Fragment) {
         // reminder allowing to recover the reminder information at least.
         reminders.forEach { reminder ->
             reminderToGeofence(reminder)?.let { geofence ->
+                log.i("Removing geofence of id ${geofence.requestId}")
                 geofencingClient.removeGeofences(mutableListOf(geofence.requestId)).run {
                     addOnSuccessListener {
                         // Geofences removed
@@ -134,11 +135,13 @@ class GeofencingHelper(fragment: Fragment) {
         val activity = fragment.requireActivity()
         val intent = Intent(activity, GeofenceBroadcastReceiver::class.java)
 
+        log.i("Creating pending intent for reminder of guid ${reminder.getGlobalyUniqueId()}")
         intent.putExtra(INTENT_EXTRA_REMINDER_KEY, reminder)
 
         return PendingIntent.getBroadcast(
             activity.applicationContext,
-            0,
+            // make this unique
+            "${reminder.getGlobalyUniqueId()}#geofencePendingIntent".hashCode(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
