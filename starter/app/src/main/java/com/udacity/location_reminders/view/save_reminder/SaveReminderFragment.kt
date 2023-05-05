@@ -1,10 +1,11 @@
 package com.udacity.location_reminders.view.save_reminder
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import com.udacity.location_reminders.R
 import com.udacity.location_reminders.view.base.BaseFragment
 import com.udacity.location_reminders.view.base.NavigationCommand
@@ -28,7 +29,7 @@ class SaveReminderFragment : BaseFragment() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_save_reminder, container, false)
 
-        setDisplayHomeAsUpEnabled(true)
+        setupMenu()
 
         binding.vm = vm
 
@@ -44,6 +45,28 @@ class SaveReminderFragment : BaseFragment() {
         GeofencingHelper.requestPermissions(this)
 
         return binding.root
+    }
+
+    // Sets up the options menu by using parent activity as a MenuHost
+    // followed article for migration from deprecated onCreateOptionsMenu
+    // https://medium.com/tech-takeaways/how-to-migrate-the-deprecated-oncreateoptionsmenu-b59635d9fe10
+    private fun setupMenu() {
+        setDisplayHomeAsUpEnabled(true)
+
+        val menuHost = (requireActivity() as MenuHost)
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                return // no menu to create, only back button
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Validate and handle the selected menu item
+                log.i("${menuItem.itemId}")
+                if (menuItem.itemId == android.R.id.home)
+                    vm.navigationCommand.value = NavigationCommand.Back
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
