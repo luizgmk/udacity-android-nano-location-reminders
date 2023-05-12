@@ -13,9 +13,12 @@ import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.utils.GeofencingHelper
 import com.udacity.location_reminders.utils.sendNotification
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class GeofenceBroadcastReceiver : BroadcastReceiver() {
+class GeofenceBroadcastReceiver : BroadcastReceiver(), KoinComponent {
     private val log = com.udacity.location_reminders.utils.Log("GeofenceBroadcastReceiver")
+    private val user : User by inject()
 
     init {
         StrictMode.setThreadPolicy(
@@ -83,7 +86,9 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         //DONE: handle the geofencing transition events and
         // send a notification to the user when he enters the geofence area
         //DONE: call @sendNotification
-        if (reminder.userUniqueId == User.userUniqueId) {
+
+
+        if (reminder.userUniqueId == user.userUniqueId) {
             log.i("Notifying reminder title \"${reminder.title}\"")
             sendNotification(context, reminder)
         } else log.w(

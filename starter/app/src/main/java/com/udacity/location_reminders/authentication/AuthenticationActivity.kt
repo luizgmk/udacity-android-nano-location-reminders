@@ -19,8 +19,8 @@ class AuthenticationActivity : AppCompatActivity() {
 
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
-    ) { res ->
-        User.onSignInResult(res)
+    ) { result ->
+        vm.onSignInResult(result)
     }
 
     private lateinit var binding: ActivityAuthenticationBinding
@@ -38,18 +38,20 @@ class AuthenticationActivity : AppCompatActivity() {
         // Login button click event
         vm.launchLoginUIEvent.observe(this) {
             // DONE: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
-            signInLauncher.launch(User.buildSignInIntent())
+            vm.launchLoginUI()
+            signInLauncher.launch(vm.buildSignInIntent())
         }
 
         // Result from Auth activity
-        User.currentUser.observe(this) {
-            if (User.isAuthenticated) {
+        vm.currentUser.observe(this) {
+            if (vm.isAuthenticated()) {
                 // DONE: If the user was authenticated, send him to RemindersActivity
                 // Navigate if authentication was successful
-                val authIntent = Intent(this, RemindersActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                }
-                startActivity(authIntent)
+                startActivity(
+                    Intent(this, RemindersActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                )
             }
         }
     }

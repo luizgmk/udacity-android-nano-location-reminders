@@ -10,11 +10,13 @@ import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.databinding.ActivityReminderDescriptionBinding
 import com.udacity.location_reminders.utils.Log
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Activity that displays the reminder details after the user clicks on the notification
  */
-class ReminderDescriptionActivity : AppCompatActivity() {
+class ReminderDescriptionActivity : AppCompatActivity(), KoinComponent {
 
     companion object {
         private const val EXTRA_REMINDER_DATA_ITEM_KEY = "EXTRA_ReminderDataItem"
@@ -28,7 +30,9 @@ class ReminderDescriptionActivity : AppCompatActivity() {
         }
     }
 
+    private val user : User by inject()
     private lateinit var binding: ActivityReminderDescriptionBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(
@@ -47,7 +51,7 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             log.e("Error parsing or obtaining reminder data")
             return
         }
-        if (reminder.userUniqueId != User.userUniqueId) {
+        if (reminder.userUniqueId != user.userUniqueId) {
             log.w("Reminder notification is not from the current user. Aborting.")
             finish()
         } else {

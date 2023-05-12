@@ -14,12 +14,17 @@ import com.udacity.location_reminders.databinding.FragmentRemindersBinding
 import com.udacity.location_reminders.utils.setDisplayHomeAsUpEnabled
 import com.udacity.location_reminders.utils.setTitle
 import com.udacity.location_reminders.utils.setup
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 
 class ReminderListFragment : BaseFragment() {
     //use Koin to retrieve the ViewModel instance
     override val vm: RemindersListViewModel by viewModel()
+
     private lateinit var binding: FragmentRemindersBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +42,7 @@ class ReminderListFragment : BaseFragment() {
 
         binding.refreshLayout.setOnRefreshListener { vm.loadReminders() }
 
-        if (!User.isAuthenticated) User.login(requireActivity())
+        vm.checkUserAuthentication(requireActivity())
 
         return binding.root
     }
@@ -93,7 +98,7 @@ class ReminderListFragment : BaseFragment() {
                 // Validate and handle the selected menu item
                 when (menuItem.itemId) {
                     R.id.logout -> {
-                        User.login(requireActivity())
+                        vm.userLogout(requireActivity())
                     }
                 }
                 return true

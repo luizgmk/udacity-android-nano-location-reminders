@@ -1,5 +1,6 @@
 package com.udacity.location_reminders.authentication.data
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
@@ -13,14 +14,17 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.udacity.location_reminders.R
 import com.udacity.location_reminders.authentication.AuthenticationActivity
+import com.udacity.location_reminders.utils.Log
+import kotlinx.coroutines.sync.Mutex
 
 interface UserPlugIn {
-    fun onLogin(user : FirebaseUser)
+    fun onLogin(user: FirebaseUser)
     fun onLogout()
 }
 
-object User {
+class User {
 
+    private val log = Log("UserDomain")
     private val userPlugInList = mutableListOf<UserPlugIn>()
 
     private val auth = Firebase.auth
@@ -35,20 +39,29 @@ object User {
     val userUniqueId
         get() = internalCurrentUser.value?.uid
 
-    fun registerPlugin(plugin : UserPlugIn) {
+    fun registerPlugin(plugin: UserPlugIn) {
+        log.i("${plugin.javaClass.name} registered as a plugin")
         userPlugInList.add(plugin)
     }
 
     fun unregisterPlugin(plugin: UserPlugIn) {
+        log.i("${plugin.javaClass.name} unregistered as a plugin")
         userPlugInList.remove(plugin)
     }
 
-    private fun notifyPlugInMembers(user : FirebaseUser?) {
-        if (user != null) userPlugInList.forEach { it.onLogin(user) }
-        else userPlugInList.forEach { it.onLogout() }
+    private fun notifyPlugInMembers(user: FirebaseUser?) {
+        if (user != null) userPlugInList.forEach {
+            log.i("Notifying user logged in to ${it.javaClass.name}")
+            it.onLogin(user)
+        }
+        else userPlugInList.forEach {
+            log.i("Notifying user logged out to ${it.javaClass.name}")
+            it.onLogout()
+        }
     }
 
-    fun login(owner: FragmentActivity) {
+    fun login(owner: Activity) {
+        log.i("Login requested")
         logout()
         val authIntent = Intent(owner, AuthenticationActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -58,6 +71,7 @@ object User {
 
     private fun logout() {
         if (isAuthenticated) {
+            log.i("Signing out")
             auth.signOut()
             internalCurrentUser.postValue(null)
             notifyPlugInMembers(null)

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 import com.udacity.location_reminders.R
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.view.base.BaseViewModel
 import com.udacity.location_reminders.view.base.NavigationCommand
 import com.udacity.location_reminders.data.ReminderDataSource
@@ -15,9 +16,10 @@ import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(
     private val app: Application,
+    user: User,
     private val dataSource: ReminderDataSource
 ) :
-    BaseViewModel(app) {
+    BaseViewModel(app, user) {
 
     val reminder = MutableLiveData<ReminderDataItem?>()
     val locationReminder = MutableLiveData<ReminderDataItem?>()

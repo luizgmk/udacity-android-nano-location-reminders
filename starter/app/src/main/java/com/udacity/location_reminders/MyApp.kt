@@ -2,6 +2,7 @@ package com.udacity.location_reminders
 
 import android.app.Application
 import com.udacity.location_reminders.authentication.AuthenticationViewModel
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.local.LocalDB
 import com.udacity.location_reminders.data.local.RemindersLocalRepository
@@ -28,20 +29,23 @@ class MyApp : Application() {
             viewModel {
                 RemindersListViewModel(
                     get(),
+                    get(),
                     get() as ReminderDataSource
                 )
             }
             viewModel {
-                AuthenticationViewModel(get())
+                AuthenticationViewModel(get(), get())
             }
             //Declare singleton definitions to be later injected using by inject()
             single {
                 //This view model is declared singleton to be used across multiple fragments
                 SaveReminderViewModel(
                     get(),
+                    get(),
                     get() as ReminderDataSource
                 )
             }
+            single { User() }
             single<ReminderDataSource> { RemindersLocalRepository(get()) }
             single { LocalDB.createRemindersDao(this@MyApp) }
         }

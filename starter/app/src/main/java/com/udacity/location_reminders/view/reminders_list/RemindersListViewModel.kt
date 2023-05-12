@@ -1,9 +1,11 @@
 package com.udacity.location_reminders.view.reminders_list
 
+import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.view.base.BaseViewModel
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.dto.ReminderDTO
@@ -12,8 +14,9 @@ import kotlinx.coroutines.launch
 
 class RemindersListViewModel(
     app: Application,
+    user : User,
     private val dataSource: ReminderDataSource
-) : BaseViewModel(app) {
+) : BaseViewModel(app, user) {
     // list that holds the reminder data to be displayed on the UI
     val remindersList = MutableLiveData<List<ReminderDataItem>>()
 
@@ -79,5 +82,13 @@ class RemindersListViewModel(
     override fun onLogoutCompleted() {
         super.onLogoutCompleted()
         loadReminders()
+    }
+
+    fun checkUserAuthentication(activity : Activity) {
+        if (!user.isAuthenticated) user.login(activity)
+    }
+
+    fun userLogout(activity : Activity) {
+        user.login(activity)
     }
 }
