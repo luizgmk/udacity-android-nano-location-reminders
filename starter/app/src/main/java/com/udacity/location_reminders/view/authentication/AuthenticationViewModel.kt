@@ -1,4 +1,4 @@
-package com.udacity.location_reminders.authentication
+package com.udacity.location_reminders.view.authentication
 
 import android.app.Activity
 import android.app.Application

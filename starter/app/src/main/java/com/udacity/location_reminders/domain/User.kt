@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.udacity.location_reminders.R
-import com.udacity.location_reminders.authentication.AuthenticationActivity
+import com.udacity.location_reminders.view.authentication.AuthenticationActivity
 import com.udacity.location_reminders.utils.Log
 import kotlinx.coroutines.sync.Mutex
 

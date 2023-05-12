@@ -7,14 +7,14 @@
 
         <variable
             name="vm"
-            type="com.udacity.location_reminders.authentication.AuthenticationViewModel" />
+            type="com.udacity.location_reminders.view.authentication.AuthenticationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_normal"
-        tools:context=".authentication.AuthenticationActivity">
+        tools:context=".view.authentication.AuthenticationActivity">
 
         <TextView
             android:layout_width="wrap_content"

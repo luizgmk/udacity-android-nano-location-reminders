@@ -1,7 +1,7 @@
 package com.udacity.location_reminders
 
 import android.app.Application
-import com.udacity.location_reminders.authentication.AuthenticationViewModel
+import com.udacity.location_reminders.view.authentication.AuthenticationViewModel
 import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.local.LocalDB
