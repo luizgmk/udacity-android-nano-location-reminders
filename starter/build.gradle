@@ -27,6 +27,8 @@ buildscript {
         version_timber = '5.0.1'
         version_cardview = '1.0.0'
 
+        version_koin = '3.4.0'
+
         version_gms='4.3.3'
         version_maps='18.1.0'
         // Beyond 20.0.0 some errors happen...
