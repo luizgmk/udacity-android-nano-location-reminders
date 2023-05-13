@@ -38,6 +38,8 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
 
     @Before
     fun startTests() {
+        // Unfortunately, couldn't figure out how to prevent Koin from being already started
+        // So stopping Koin at start to prevent exception
         stopKoin()
         startKoin {
             modules(
@@ -51,30 +53,30 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun loadRemindersWithNoLoggedInUser() = runTest {
+        // GIVEN no user is logged in
+        // WHEN loading reminders
         vm.loadReminders()
         vm.remindersList.getOrAwaitValue()
 
+        // THEN an empty list of reminders is loaded
         MatcherAssert.assertThat(user.userUniqueId.value, CoreMatchers.`is`(nullValue()))
         MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(0))
     }
 
     @Test
-    fun loadRemindersWithUser1() = runTest {
-        // Confirm no user logged in at start
-        MatcherAssert.assertThat(user.userUniqueId.value, CoreMatchers.`is`(nullValue()))
-
-        // Confirm no reminders loaded at start
+    fun loadRemindersWhenUser1LogsIn() = runTest {
+        // GIVEN no reminders are loaded
         vm.loadReminders()
         vm.remindersList.getOrAwaitValue()
         MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(0))
 
-        // Login with user1
+        // GIVEN user1 logs in
         val fakeRepo = repo as FakeDataSource
         user.onSignInResult(fakeRepo.user1id)
         user.userUniqueId.getOrAwaitValue()
         MatcherAssert.assertThat(user.userUniqueId.value, CoreMatchers.`is`(fakeRepo.user1id))
 
-        // Verify correct reminders were loaded for user1
+        // THEN, correct reminders are loaded for user1
         vm.loadReminders()
         vm.remindersList.getOrAwaitValue()
         MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(2))
@@ -89,22 +91,19 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun loadRemindersWithUser2() = runTest {
-        // Confirm no user logged in at start
-        MatcherAssert.assertThat(user.userUniqueId.value, CoreMatchers.`is`(nullValue()))
-
-        // Confirm no reminders loaded at start
+    fun loadRemindersWhenUser2LogsIn() = runTest {
+        // GIVEN no reminders are loaded
         vm.loadReminders()
         vm.remindersList.getOrAwaitValue()
         MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(0))
 
-        // Login with user2
+        // GIVEN user2 logs in
         val fakeRepo = repo as FakeDataSource
         user.onSignInResult(fakeRepo.user2id)
         user.userUniqueId.getOrAwaitValue()
         MatcherAssert.assertThat(user.userUniqueId.value, CoreMatchers.`is`(fakeRepo.user2id))
 
-        // Verify correct reminders were loaded for user2
+        // THEN, correct reminders are loaded for user2
         vm.loadReminders()
         vm.remindersList.getOrAwaitValue()
         MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(1))
@@ -113,4 +112,40 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
             CoreMatchers.`is`(fakeRepo.reminder3.id)
         )
     }
+
+    @Test
+    fun invalidateShowNoDataWhenNoRemindersIsTrue() = runTest {
+        TODO("Pending")
+    }
+
+    @Test
+    fun invalidateShowNoDataWhenNoRemindersIsFalse() = runTest {
+        TODO("Pending")
+    }
+
+    @Test
+    fun onLoginSuccessfulWhenUserLogsInIsCalled() = runTest {
+        TODO("Pending")
+    }
+
+    @Test
+    fun onLogoutCompletedWhenUserLogsOutIsCalled() = runTest {
+        TODO("Pending")
+    }
+
+    @Test
+    fun checkUserAuthenticationWhenUserIsLoggedInTriggersLogin() = runTest {
+        TODO("Pending")
+    }
+
+    @Test
+    fun checkUserAuthenticationWhenUserIsLoggedInDoNotTriggerLogin() = runTest {
+        TODO("Pending")
+    }
+
+    @Test
+    fun userLogoutWhenCalledTriggersLogin() = runTest {
+        TODO("Pending")
+    }
+
 }
