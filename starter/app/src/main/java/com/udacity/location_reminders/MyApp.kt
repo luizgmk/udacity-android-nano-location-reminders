@@ -6,6 +6,7 @@ import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.local.LocalDB
 import com.udacity.location_reminders.data.local.RemindersLocalRepository
+import com.udacity.location_reminders.domain.UserInterface
 import com.udacity.location_reminders.view.reminders_list.RemindersListViewModel
 import com.udacity.location_reminders.view.save_reminder.SaveReminderViewModel
 import org.koin.android.ext.koin.androidContext
@@ -30,7 +31,7 @@ class MyApp : Application() {
                 RemindersListViewModel(
                     get(),
                     get(),
-                    get() as ReminderDataSource
+                    get()
                 )
             }
             viewModel {
@@ -42,10 +43,10 @@ class MyApp : Application() {
                 SaveReminderViewModel(
                     get(),
                     get(),
-                    get() as ReminderDataSource
+                    get()
                 )
             }
-            single { User() }
+            single<UserInterface> { User() }
             single<ReminderDataSource> { RemindersLocalRepository(get()) }
             single { LocalDB.createRemindersDao(this@MyApp) }
         }

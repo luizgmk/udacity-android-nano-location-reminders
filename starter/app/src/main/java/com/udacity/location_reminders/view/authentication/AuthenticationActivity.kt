@@ -38,12 +38,11 @@ class AuthenticationActivity : AppCompatActivity() {
         // Login button click event
         vm.launchLoginUIEvent.observe(this) {
             // DONE: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
-            vm.launchLoginUI()
             signInLauncher.launch(vm.buildSignInIntent())
         }
 
         // Result from Auth activity
-        vm.currentUser.observe(this) {
+        vm.authenticated.observe(this) {
             if (vm.isAuthenticated()) {
                 // DONE: If the user was authenticated, send him to RemindersActivity
                 // Navigate if authentication was successful

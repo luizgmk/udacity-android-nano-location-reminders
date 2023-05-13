@@ -9,6 +9,7 @@ import com.udacity.location_reminders.view.base.BaseViewModel
 import com.udacity.location_reminders.view.base.NavigationCommand
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.dto.ReminderDTO
+import com.udacity.location_reminders.domain.UserInterface
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
 import com.udacity.location_reminders.utils.Constants
 import com.udacity.location_reminders.utils.SingleLiveEvent
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(
     private val app: Application,
-    user: User,
+    user: UserInterface,
     private val dataSource: ReminderDataSource
 ) :
     BaseViewModel(app, user) {
@@ -115,7 +116,7 @@ class SaveReminderViewModel(
         return true
     }
 
-    override fun onLoginSuccessful(user: FirebaseUser) {
+    override fun onLoginSuccessful(uid : String) {
         onClear()
     }
 

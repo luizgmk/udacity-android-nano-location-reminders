@@ -10,6 +10,7 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
 import com.udacity.location_reminders.authentication.data.User
+import com.udacity.location_reminders.domain.UserInterface
 import com.udacity.location_reminders.utils.GeofencingHelper
 import com.udacity.location_reminders.utils.sendNotification
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
@@ -18,7 +19,7 @@ import org.koin.core.component.inject
 
 class GeofenceBroadcastReceiver : BroadcastReceiver(), KoinComponent {
     private val log = com.udacity.location_reminders.utils.Log("GeofenceBroadcastReceiver")
-    private val user : User by inject()
+    private val user : UserInterface by inject()
 
     init {
         StrictMode.setThreadPolicy(
@@ -88,7 +89,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver(), KoinComponent {
         //DONE: call @sendNotification
 
 
-        if (reminder.userUniqueId == user.userUniqueId) {
+        if (reminder.userUniqueId == user.userUniqueId.value) {
             log.i("Notifying reminder title \"${reminder.title}\"")
             sendNotification(context, reminder)
         } else log.w(

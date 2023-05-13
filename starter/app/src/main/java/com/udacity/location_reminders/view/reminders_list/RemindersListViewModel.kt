@@ -10,11 +10,12 @@ import com.udacity.location_reminders.view.base.BaseViewModel
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.data.dto.Result
+import com.udacity.location_reminders.domain.UserInterface
 import kotlinx.coroutines.launch
 
 class RemindersListViewModel(
     app: Application,
-    user : User,
+    user : UserInterface,
     private val dataSource: ReminderDataSource
 ) : BaseViewModel(app, user) {
     // list that holds the reminder data to be displayed on the UI
@@ -24,8 +25,7 @@ class RemindersListViewModel(
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
      * or show error if any
      */
-    fun loadReminders() {
-        val uid = userUniqueId
+    fun loadReminders(uid : String? = userUniqueId) {
         if (uid == null) {
             remindersList.value = listOf()
             invalidateShowNoData()
@@ -74,14 +74,13 @@ class RemindersListViewModel(
         showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
     }
 
-    override fun onLoginSuccessful(user : FirebaseUser) {
-        super.onLoginSuccessful(user)
-        loadReminders()
+    override fun onLoginSuccessful(uid: String) {
+        loadReminders(uid)
     }
 
     override fun onLogoutCompleted() {
         super.onLogoutCompleted()
-        loadReminders()
+        loadReminders(null)
     }
 
     fun checkUserAuthentication(activity : Activity) {

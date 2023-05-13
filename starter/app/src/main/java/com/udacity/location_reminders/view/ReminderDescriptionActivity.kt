@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.udacity.location_reminders.R
 import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.databinding.ActivityReminderDescriptionBinding
+import com.udacity.location_reminders.domain.UserInterface
 import com.udacity.location_reminders.utils.Log
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
 import org.koin.core.component.KoinComponent
@@ -30,7 +31,9 @@ class ReminderDescriptionActivity : AppCompatActivity(), KoinComponent {
         }
     }
 
-    private val user : User by inject()
+    // This bypass the regular flow through a viewModel, but being the only data required
+    // kept direct access to domain layer for simplicity
+    private val user : UserInterface by inject()
     private lateinit var binding: ActivityReminderDescriptionBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +54,7 @@ class ReminderDescriptionActivity : AppCompatActivity(), KoinComponent {
             log.e("Error parsing or obtaining reminder data")
             return
         }
-        if (reminder.userUniqueId != user.userUniqueId) {
+        if (reminder.userUniqueId != user.userUniqueId.value) {
             log.w("Reminder notification is not from the current user. Aborting.")
             finish()
         } else {

@@ -1,47 +1,29 @@
 package com.udacity.location_reminders.view.base
 
 import android.app.Application
-import androidx.annotation.MainThread
 import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseUser
-import com.udacity.location_reminders.authentication.data.User
-import com.udacity.location_reminders.authentication.data.UserPlugIn
+import com.udacity.location_reminders.domain.UserInterface
 import com.udacity.location_reminders.utils.SingleLiveEvent
-import java.io.Closeable
 
 /**
  * Base class for View Models to declare the common LiveData objects in one place
  */
-abstract class BaseViewModel(app: Application, val user: User) : AndroidViewModel(app) {
+abstract class BaseViewModel(app: Application, val user: UserInterface) : AndroidViewModel(app) {
 
-    var userUniqueId: String? = null
-    open fun onLogoutCompleted() {
-        userUniqueId = null
+    val authenticated = user.userUniqueId.map {
+        if (it == null) onLogoutCompleted()
+        else onLoginSuccessful(it)
+        it != null
     }
 
-    open fun onLoginSuccessful(user: FirebaseUser) {
-        userUniqueId = user.uid
-    }
+    val userUniqueId
+        get() = user.userUniqueId.value
 
-    private val registration = object : UserPlugIn, Closeable {
-        override fun onLogout() {
-            onLogoutCompleted()
-        }
+    // for the top viewModel to override if something to do
+    open fun onLogoutCompleted() {}
 
-        override fun onLogin(user: FirebaseUser) {
-            onLoginSuccessful(user)
-        }
-
-        override fun close() {
-            user.unregisterPlugin(this)
-        }
-    }
-
-    init {
-        addCloseable(registration)
-        user.registerPlugin(registration)
-        userUniqueId = user.userUniqueId
-    }
+    // for the top viewModel to override if something to do
+    open fun onLoginSuccessful(uid : String) {}
 
     val navigationCommand: SingleLiveEvent<NavigationCommand> = SingleLiveEvent()
     val showErrorMessage: SingleLiveEvent<String> = SingleLiveEvent()

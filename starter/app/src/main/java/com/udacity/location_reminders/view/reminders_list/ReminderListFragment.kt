@@ -7,17 +7,13 @@ import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import com.udacity.location_reminders.R
-import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.view.base.BaseFragment
 import com.udacity.location_reminders.view.base.NavigationCommand
 import com.udacity.location_reminders.databinding.FragmentRemindersBinding
 import com.udacity.location_reminders.utils.setDisplayHomeAsUpEnabled
 import com.udacity.location_reminders.utils.setTitle
 import com.udacity.location_reminders.utils.setup
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.java.KoinJavaComponent
-import org.koin.java.KoinJavaComponent.inject
 
 class ReminderListFragment : BaseFragment() {
     //use Koin to retrieve the ViewModel instance
@@ -77,7 +73,7 @@ class ReminderListFragment : BaseFragment() {
         }
 
 //        setup the recycler view using the extension function
-        binding.reminderssRecyclerView.setup(adapter)
+        binding.remindersRecyclerView.setup(adapter)
     }
 
     // Sets up the options menu by using parent activity as a MenuHost
