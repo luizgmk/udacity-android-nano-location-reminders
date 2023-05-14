@@ -57,7 +57,7 @@ class SaveReminderViewModel(
      */
     fun onClear() {
         reminder.postValue(null)
-        locationReminder.postValue(ReminderDataItem.getNewEmptyReminder(userUniqueId!!))
+        locationReminder.postValue(ReminderDataItem.getNewEmptyReminder(userUniqueId ?: ""))
     }
 
     /**
