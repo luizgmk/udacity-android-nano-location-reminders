@@ -1,6 +1,7 @@
 package com.udacity.location_reminders.view.reminders_list
 
 import android.os.Parcelable
+import com.udacity.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.utils.Constants
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -30,6 +31,29 @@ data class ReminderDataItem(
             longitude = null,
             radius = Constants.DEFAULT_ROUND_GEOFENCE_RADIUS
         )
+
+        fun fromReminderDTO(reminder: ReminderDTO): ReminderDataItem = ReminderDataItem(
+            reminder.userUniqueId,
+            reminder.title,
+            reminder.description,
+            reminder.location,
+            reminder.latitude,
+            reminder.longitude,
+            reminder.radius,
+            reminder.id
+        )
     }
+
+    fun toReminderDTO() : ReminderDTO = ReminderDTO(
+        userUniqueId!!,
+        title,
+        description,
+        location,
+        latitude,
+        longitude,
+        radius,
+        id
+    )
+
     fun getGlobalyUniqueId() = "${userUniqueId}/${id}"
 }

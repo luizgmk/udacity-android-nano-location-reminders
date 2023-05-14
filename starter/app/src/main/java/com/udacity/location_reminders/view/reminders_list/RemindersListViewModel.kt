@@ -43,16 +43,7 @@ open class RemindersListViewModel(
                         dataList.addAll(result.data.mapNotNull { reminder ->
                             if (reminder is ReminderDTO) {
                                 //map the reminder data from the DB to the be ready to be displayed on the UI
-                                ReminderDataItem(
-                                    reminder.userUniqueId,
-                                    reminder.title,
-                                    reminder.description,
-                                    reminder.location,
-                                    reminder.latitude,
-                                    reminder.longitude,
-                                    reminder.radius,
-                                    reminder.id
-                                )
+                                ReminderDataItem.fromReminderDTO(reminder)
                             } else null
                         })
                     }

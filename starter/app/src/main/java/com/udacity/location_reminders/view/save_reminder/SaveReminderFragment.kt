@@ -80,7 +80,7 @@ class SaveReminderFragment : BaseFragment() {
 
         binding.saveReminder.setOnClickListener {
             val reminder = vm.reminder.value ?: return@setOnClickListener
-            if (!vm.validateEnteredData(reminder)) return@setOnClickListener
+            if (!vm.validateEnteredData()) return@setOnClickListener
 
             if (!GeofencingHelper.permissionsGranted) {
                 // vm.showToast.value = getString(R.string.err_not_possible_to_save)
@@ -93,7 +93,7 @@ class SaveReminderFragment : BaseFragment() {
             geofencingHelper.processRemindersGeofences(listOf(reminder),
                 onSuccess = {
                     // DONE 2) save the reminder to the local db
-                    vm.saveReminder(reminder)
+                    vm.saveReminder()
                 },
                 onFailure = {
                     vm.showToast.value = it

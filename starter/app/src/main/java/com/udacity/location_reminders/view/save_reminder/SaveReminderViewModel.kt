@@ -2,13 +2,10 @@ package com.udacity.location_reminders.view.save_reminder
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseUser
 import com.udacity.location_reminders.R
-import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.view.base.BaseViewModel
 import com.udacity.location_reminders.view.base.NavigationCommand
 import com.udacity.location_reminders.data.ReminderDataSource
-import com.udacity.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.domain.UserInterface
 import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
 import com.udacity.location_reminders.utils.Constants
@@ -47,7 +44,6 @@ class SaveReminderViewModel(
                 )
         }
 
-
     fun saveLocation() {
         if (locationReminder.value?.location.isNullOrEmpty()) {
             showSnackBar.value = app.getString(R.string.select_location)
@@ -67,21 +63,12 @@ class SaveReminderViewModel(
     /**
      * Save the reminder to the data source
      */
-    fun saveReminder(reminderData: ReminderDataItem) {
+    fun saveReminder() {
+        val reminderData = reminder.value ?: return
+
         showLoading.value = true
         viewModelScope.launch {
-            dataSource.saveReminder(
-                ReminderDTO(
-                    userUniqueId!!,
-                    reminderData.title,
-                    reminderData.description,
-                    reminderData.location,
-                    reminderData.latitude,
-                    reminderData.longitude,
-                    reminderData.radius,
-                    reminderData.id
-                )
-            )
+            dataSource.saveReminder(reminderData.toReminderDTO())
             showLoading.value = false
             showToast.value = app.getString(R.string.reminder_saved)
             navigationCommand.value = NavigationCommand.Back
@@ -91,7 +78,9 @@ class SaveReminderViewModel(
     /**
      * Validate the entered data and show error to the user if there's any invalid data
      */
-    fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
+    fun validateEnteredData(): Boolean {
+        val reminderData = reminder.value ?: return false
+
         if (reminderData.userUniqueId.isNullOrEmpty()
             || reminderData.userUniqueId != userUniqueId
         ) {
@@ -116,7 +105,7 @@ class SaveReminderViewModel(
         return true
     }
 
-    override fun onLoginSuccessful(uid : String) {
+    override fun onLoginSuccessful(uid: String) {
         onClear()
     }
 
