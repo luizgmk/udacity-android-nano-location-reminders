@@ -13,13 +13,13 @@ import com.udacity.location_reminders.data.dto.Result
 import com.udacity.location_reminders.domain.UserInterface
 import kotlinx.coroutines.launch
 
-class RemindersListViewModel(
+open class RemindersListViewModel(
     app: Application,
     user : UserInterface,
     private val dataSource: ReminderDataSource
 ) : BaseViewModel(app, user) {
     // list that holds the reminder data to be displayed on the UI
-    val remindersList = MutableLiveData<List<ReminderDataItem>>()
+    val remindersList = MutableLiveData<List<ReminderDataItem>>(listOf())
 
     /**
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,

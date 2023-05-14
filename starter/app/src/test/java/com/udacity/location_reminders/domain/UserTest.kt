@@ -18,8 +18,10 @@ class UserTest : UserInterface {
     override val isAuthenticated
         get() = userUniqueId.value != null
 
+    val loginTriggered = MutableLiveData(false)
+
     override fun login(owner: Activity) {
-        TODO("Not yet implemented")
+        loginTriggered.postValue(true)
     }
 
     override fun logout() {

@@ -1,5 +1,6 @@
 package com.udacity.location_reminders.view.reminders_list
 
+import android.app.Activity
 import android.app.Application
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.location_reminders.data.FakeDataSource
@@ -114,38 +115,98 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun invalidateShowNoDataWhenNoRemindersIsTrue() = runTest {
-        TODO("Pending")
+    fun invalidateShowNoData() = runTest {
+        // WHEN reminders are refreshed and no reminders are found
+        vm.loadReminders()
+
+        // THEN, invalidateShowNoData is called and showNoData value is set to true
+        vm.showNoData.getOrAwaitValue()
+        MatcherAssert.assertThat(vm.showNoData.value, CoreMatchers.`is`(true))
+
+        // WHEN a user that has reminders registered logs in and reminders are refreshed
+        val fakeRepo = repo as FakeDataSource
+        user.onSignInResult(fakeRepo.user1id)
+        vm.loadReminders()
+
+        // THEN, invalidateShowNoData is called and showNoData value is set to false
+        vm.showNoData.getOrAwaitValue()
+        MatcherAssert.assertThat(vm.showNoData.value, CoreMatchers.`is`(false))
+
+        // WHEN user logs out and reminders are emptied
+        user.logout()
+        vm.loadReminders()
+
+        // THEN, invalidateShowNoData is called and showNoData value is set to true
+        vm.showNoData.getOrAwaitValue()
+        MatcherAssert.assertThat(vm.showNoData.value, CoreMatchers.`is`(true))
     }
 
     @Test
-    fun invalidateShowNoDataWhenNoRemindersIsFalse() = runTest {
-        TODO("Pending")
-    }
+    fun onLoginSuccessAndLogoutCompleted() = runTest {
+        // GIVEN no reminders are loaded when no user is logged in
+        MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(0))
 
-    @Test
-    fun onLoginSuccessfulWhenUserLogsInIsCalled() = runTest {
-        TODO("Pending")
-    }
+        // WHEN a users logs in
+        val fakeRepo = repo as FakeDataSource
+        user.onSignInResult(fakeRepo.user1id)
+        user.userUniqueId.getOrAwaitValue()
+        vm.authenticated.getOrAwaitValue()
+        vm.remindersList.getOrAwaitValue()
 
-    @Test
-    fun onLogoutCompletedWhenUserLogsOutIsCalled() = runTest {
-        TODO("Pending")
+        // THEN reminders are loaded automatically for that user
+        MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(2))
+
+        // BUT WHEN the user logs out
+        user.logout()
+
+        // THEN the reminderList is refreshed automatically, returning to an empty list
+        user.userUniqueId.getOrAwaitValue()
+        vm.authenticated.getOrAwaitValue()
+        vm.remindersList.getOrAwaitValue()
+        MatcherAssert.assertThat(vm.remindersList.value?.size, CoreMatchers.`is`(0))
     }
 
     @Test
     fun checkUserAuthenticationWhenUserIsLoggedInTriggersLogin() = runTest {
-        TODO("Pending")
+        // GIVEN no user is logged in
+        // WHEN checking whether user is authenticated
+        vm.checkUserAuthentication(Activity())
+        val userTest = user as UserTest
+        userTest.loginTriggered.getOrAwaitValue()
+        // THEN login is triggered
+        MatcherAssert.assertThat(userTest.loginTriggered.value, CoreMatchers.`is`(true))
     }
 
     @Test
     fun checkUserAuthenticationWhenUserIsLoggedInDoNotTriggerLogin() = runTest {
-        TODO("Pending")
+        // GIVEN a user is logged in
+        val fakeRepo = repo as FakeDataSource
+        user.onSignInResult(fakeRepo.user1id)
+        user.userUniqueId.getOrAwaitValue()
+
+        // WHEN checking whether user is authenticated
+        vm.checkUserAuthentication(Activity())
+        val userTest = user as UserTest
+        userTest.loginTriggered.getOrAwaitValue()
+
+        // THEN login is not triggered
+        MatcherAssert.assertThat(userTest.loginTriggered.value, CoreMatchers.`is`(false))
     }
 
     @Test
     fun userLogoutWhenCalledTriggersLogin() = runTest {
-        TODO("Pending")
+        // GIVEN a user is logged in
+        val fakeRepo = repo as FakeDataSource
+        user.onSignInResult(fakeRepo.user1id)
+        user.userUniqueId.getOrAwaitValue()
+
+        // WHEN logout is triggered
+        vm.userLogout(Activity())
+        val userTest = user as UserTest
+        userTest.loginTriggered.getOrAwaitValue()
+
+        // THEN login is automatically triggered
+        MatcherAssert.assertThat(userTest.loginTriggered.value, CoreMatchers.`is`(true))
     }
 
 }
