@@ -1,14 +1,17 @@
 package com.udacity.location_reminders.data
 
-import androidx.lifecycle.MutableLiveData
-import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.data.dto.Result
+import com.udacity.location_reminders.utils.SingleLiveEvent
+import kotlinx.coroutines.*
 
 //Use FakeDataSource that acts as a test double to the LocalDataSource
 class FakeDataSource : ReminderDataSource {
 
     // DONE: Create a fake data source to act as a double to the real data source
+    companion object {
+        private const val serviceLatencyInMillis = 500L
+    }
 
     val user1id = "userUniqueId#1"
     val user2id = "userUniqueId#2"
@@ -56,7 +59,10 @@ class FakeDataSource : ReminderDataSource {
         return Result.Success(reminders[userUniqueId] as List<ReminderDTO>)
     }
 
+    val lastSavedReminder = SingleLiveEvent<ReminderDTO?>()
     override suspend fun saveReminder(reminder: ReminderDTO) {
+        lastSavedReminder.postValue(reminder)
+        delay(serviceLatencyInMillis)
         if (reminders[reminder.userUniqueId] == null) {
             reminders[reminder.userUniqueId] = mutableListOf()
         } else {

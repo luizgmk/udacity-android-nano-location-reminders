@@ -65,6 +65,7 @@ dependencies {
     // Room database
     implementation "androidx.room:room-runtime:$version_room"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-testing:2.6.1'
     kapt "androidx.room:room-compiler:$version_room"
     implementation "androidx.room:room-ktx:$version_room"
 
@@ -87,13 +88,13 @@ dependencies {
     // Testing - Core
     testImplementation "org.hamcrest:hamcrest:$version_hamcrest"
     testImplementation "androidx.test:core-ktx:1.5.0"
-    testImplementation 'org.robolectric:robolectric:4.9'
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"
     testImplementation "androidx.arch.core:core-testing:2.2.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_kotlin_coroutines"
     testImplementation 'androidx.test:runner:1.5.2'
+    testImplementation 'org.robolectric:robolectric:4.9'
 
-    // Dependencies for Android instrumented unit tests
+    // Dependencies for Android instrumented tests
     androidTestImplementation "junit:junit:$version_junit_androidx"
     androidTestImplementation "androidx.test.ext:junit:$version_junit_androidx"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_kotlin_coroutines"
@@ -105,8 +106,10 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$version_expresso_core"
     debugImplementation "androidx.test.espresso:espresso-idling-resource:$version_expresso_core"
 
+    // Mockito
     testImplementation "org.mockito:mockito-core:5.3.1"
-    testImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.28.3'
+//    testImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.28.3'
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.1.0"
     //testImplementation 'org.mockito:mockito-inline:5.2.0'
 
 
