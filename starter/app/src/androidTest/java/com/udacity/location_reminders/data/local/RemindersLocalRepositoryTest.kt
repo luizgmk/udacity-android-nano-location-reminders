@@ -8,7 +8,7 @@ import com.udacity.location_reminders.data.FakeDataSource
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.dto.Result
 import com.udacity.location_reminders.domain.UserInterface
-import com.udacity.location_reminders.domain.UserTest
+import com.udacity.location_reminders.domain.FakeUser
 import com.udacity.location_reminders.test_utils.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -33,6 +33,7 @@ class RemindersLocalRepositoryTest : KoinTest {
 
     private lateinit var database: RemindersDatabase
     private lateinit var fakeDataSource: FakeDataSource
+    private val dataSource: ReminderDataSource by inject()
     private val user: UserInterface by inject()
     private val repository: RemindersLocalRepository by inject()
 
@@ -53,12 +54,12 @@ class RemindersLocalRepositoryTest : KoinTest {
         GlobalContext.startKoin {
             modules(module {
                 single<ReminderDataSource> { FakeDataSource() }
-                single<UserInterface> { UserTest() }
+                single<UserInterface> { FakeUser() }
                 single { database.reminderDao() }
                 single { RemindersLocalRepository(get(), mainCoroutineRule.dispatcher) }
             })
         }
-        fakeDataSource = FakeDataSource()
+        fakeDataSource = dataSource as FakeDataSource
         user.onSignInResult(fakeDataSource.user1id)
     }
 

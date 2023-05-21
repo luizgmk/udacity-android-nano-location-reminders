@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.location_reminders.data.FakeDataSource
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.domain.UserInterface
-import com.udacity.location_reminders.domain.UserTest
+import com.udacity.location_reminders.domain.FakeUser
 import com.udacity.location_reminders.test_utils.MainCoroutineRule
 import com.udacity.location_reminders.test_utils.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,7 +46,7 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
             modules(
                 module {
                     single<ReminderDataSource> { FakeDataSource() }
-                    single<UserInterface> { UserTest() }
+                    single<UserInterface> { FakeUser() }
                     single { RemindersListViewModel(Application(), get(), get()) }
                 })
         }
@@ -171,7 +171,7 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
         // GIVEN no user is logged in
         // WHEN checking whether user is authenticated
         vm.checkUserAuthentication(Activity())
-        val userTest = user as UserTest
+        val userTest = user as FakeUser
         userTest.loginTriggered.getOrAwaitValue()
         // THEN login is triggered
         MatcherAssert.assertThat(userTest.loginTriggered.value, CoreMatchers.`is`(true))
@@ -186,7 +186,7 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
 
         // WHEN checking whether user is authenticated
         vm.checkUserAuthentication(Activity())
-        val userTest = user as UserTest
+        val userTest = user as FakeUser
         userTest.loginTriggered.getOrAwaitValue()
 
         // THEN login is not triggered
@@ -202,7 +202,7 @@ class RemindersListViewModelTest : AutoCloseKoinTest() {
 
         // WHEN logout is triggered
         vm.userLogout(Activity())
-        val userTest = user as UserTest
+        val userTest = user as FakeUser
         userTest.loginTriggered.getOrAwaitValue()
 
         // THEN login is automatically triggered

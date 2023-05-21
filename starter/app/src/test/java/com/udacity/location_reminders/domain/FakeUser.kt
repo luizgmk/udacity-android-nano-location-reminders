@@ -4,7 +4,7 @@ import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class UserTest : UserInterface {
+class FakeUser : UserInterface {
 
     override fun onSignInResult(newUserUniqueId: String?) {
         internalUniqueUserId.postValue(newUserUniqueId)
