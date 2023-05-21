@@ -42,7 +42,7 @@ class DataBindingIdlingResource : IdlingResource {
     // onTransitionToIdle callbacks if Espresso never thought we were idle in the first place.
     private var wasNotIdle = false
 
-    lateinit var activity: FragmentActivity
+    var activity: FragmentActivity? = null
 
     override fun getName() = "DataBinding $id"
 
@@ -58,7 +58,7 @@ class DataBindingIdlingResource : IdlingResource {
         } else {
             wasNotIdle = true
             // check next frame
-            activity.findViewById<View>(android.R.id.content).postDelayed({
+            activity?.findViewById<View>(android.R.id.content)?.postDelayed({
                 isIdleNow
             }, 16)
         }

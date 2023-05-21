@@ -4,6 +4,7 @@ import com.udacity.location_reminders.data.FakeDataSource
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.data.dto.Result
+import com.udacity.location_reminders.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.*
 
 /**
@@ -11,7 +12,7 @@ import kotlinx.coroutines.*
  *
  * The repository is implemented so that you can focus on only testing it.
  *
- * @param remindersDao the dao that does the Room db operations
+ * @param dataSource the dao that does the Room db operations
  * @param dispatcher a coroutine dispatcher to offload the blocking IO tasks
  */
 class FakeRemindersLocalRepository(
@@ -21,13 +22,14 @@ class FakeRemindersLocalRepository(
 
     companion object {
         private const val IO_DELAY = 200L
+        const val MSG_DB_ERROR = "Some db error"
     }
 
-    val simulateDatabaseError = false
+    var simulateDatabaseError = false
 
     private suspend fun emulateIoConditions() {
         delay(IO_DELAY)
-        if (simulateDatabaseError) throw Exception("Some db error")
+        if (simulateDatabaseError) throw Exception(MSG_DB_ERROR)
     }
 
     /**
@@ -37,8 +39,10 @@ class FakeRemindersLocalRepository(
     override suspend fun getReminders(userUniqueId: String): Result<List<ReminderDTO>> =
         withContext(dispatcher) {
             return@withContext try {
-                emulateIoConditions()
-                dataSource.getReminders(userUniqueId)
+                wrapEspressoIdlingResource {
+                    emulateIoConditions()
+                    dataSource.getReminders(userUniqueId)
+                }
             } catch (ex: Exception) {
                 Result.Error(ex.localizedMessage)
             }
@@ -50,8 +54,10 @@ class FakeRemindersLocalRepository(
      */
     override suspend fun saveReminder(reminder: ReminderDTO) =
         withContext(dispatcher) {
-            emulateIoConditions()
-            dataSource.saveReminder(reminder)
+            wrapEspressoIdlingResource {
+                emulateIoConditions()
+                dataSource.saveReminder(reminder)
+            }
         }
 
     /**
@@ -62,8 +68,10 @@ class FakeRemindersLocalRepository(
     override suspend fun getReminder(userUniqueId: String, id: String): Result<ReminderDTO> =
         withContext(dispatcher) {
             try {
-                emulateIoConditions()
-                return@withContext dataSource.getReminder(id, userUniqueId)
+                wrapEspressoIdlingResource {
+                    emulateIoConditions()
+                    return@withContext dataSource.getReminder(id, userUniqueId)
+                }
             } catch (e: Exception) {
                 return@withContext Result.Error(e.localizedMessage)
             }
@@ -74,8 +82,10 @@ class FakeRemindersLocalRepository(
      */
     override suspend fun deleteAllReminders(userUniqueId: String) {
         withContext(dispatcher) {
-            emulateIoConditions()
-            dataSource.deleteAllReminders(userUniqueId)
+            wrapEspressoIdlingResource {
+                emulateIoConditions()
+                dataSource.deleteAllReminders(userUniqueId)
+            }
         }
     }
 }

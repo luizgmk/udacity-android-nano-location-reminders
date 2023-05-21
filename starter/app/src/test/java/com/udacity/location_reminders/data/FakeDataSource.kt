@@ -56,7 +56,9 @@ class FakeDataSource : ReminderDataSource {
         )
 
     override suspend fun getReminders(userUniqueId: String): Result<List<ReminderDTO>> {
-        return Result.Success(reminders[userUniqueId] as List<ReminderDTO>)
+        return if (reminders[userUniqueId] == null)
+            Result.Success(mutableListOf())
+        else Result.Success(reminders[userUniqueId] as List<ReminderDTO>)
     }
 
     val lastSavedReminder = SingleLiveEvent<ReminderDTO?>()
