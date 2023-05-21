@@ -66,25 +66,10 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
         // Unfortunately, couldn't figure out how to prevent Koin from being already started
         // So stopping Koin at start to prevent exception
         stopKoin()
-    }
 
-    private fun startKoinWithFakeDatasource() {
         GlobalContext.startKoin {
             modules(module {
                 single<ReminderDataSource> { fakeDataSource }
-                single<UserInterface> { UserTest() }
-                single { SaveReminderViewModel(mockApp, get(), get()) }
-            })
-        }
-        fakeDataSource = FakeDataSource()
-        user.onSignInResult(fakeDataSource.user1id)
-    }
-
-    private fun startKoinWithMockedDatasource() {
-        mockedDataSource = mock()
-        GlobalContext.startKoin {
-            modules(module {
-                single<ReminderDataSource> { mockedDataSource }
                 single<UserInterface> { UserTest() }
                 single { SaveReminderViewModel(mockApp, get(), get()) }
             })
@@ -122,8 +107,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
     // val geofenceLocationDescription: LiveData<String>
     @Test
     fun geofenceLocationDescriptionNoLocationSelected() = runTest {
-        // Setup
-        startKoinWithFakeDatasource()
         // GIVEN no location is selected
         val reminder = ReminderDataItem.fromReminderDTO(fakeDataSource.reminder1)
         reminder.location = null
@@ -140,8 +123,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun geofenceLocationDescriptionWithLocationSelected() {
-        // Setup
-        startKoinWithFakeDatasource()
         // GIVEN location is selected
         val reminder = ReminderDataItem.fromReminderDTO(fakeDataSource.reminder1)
         vm.editReminder(reminder)
@@ -164,8 +145,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
     // region Methods test
     @Test
     fun editReminder() {
-        // Setup
-        startKoinWithFakeDatasource()
         // GIVEN a reminder
         val reminder = ReminderDataItem.fromReminderDTO(fakeDataSource.reminder1)
         // WHEN editing the reminder is requested
@@ -187,9 +166,7 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun saveLocation() {
-        // Setup
-        startKoinWithFakeDatasource()
+    fun saveLocationWhenSelected() {
         // GIVEN a location is selected
         val reminder = ReminderDataItem.fromReminderDTO(fakeDataSource.reminder1)
         vm.editReminder(reminder)
@@ -198,38 +175,30 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
         // THEN locationSaved event is triggered to indicate user has confirmed its selection
         vm.locationSaved.getOrAwaitValue()
         MatcherAssert.assertThat(vm.locationSaved.value, CoreMatchers.`is`(true))
-        // AND snackbar message is never sent
+        // AND snackBar message is never sent
         assertFailsWith<TimeoutException> {
-            vm.showSnackBar.getOrAwaitValue()
+            vm.showSnackBar.getOrAwaitValue(1)
         }
-        // AND data source is updated with the reminder
-        // TODO
-        // AT END, reset locationSaved.
-        // Unfortunately, during tests SingleLiveEvent is not resetting it even if adding an
-        // observer
-        vm.locationSaved.value = false
-        vm.locationSaved.getOrAwaitValue()
-        MatcherAssert.assertThat(vm.locationSaved.value, CoreMatchers.`is`(false))
+    }
 
-        // GIVEN a location is NOT selected
+    @Test
+    fun saveLocationWhenNotSelected() {
+        // GIVEN no location is selected
         vm.onClear()
+        MatcherAssert.assertThat(vm.locationSaved.value, CoreMatchers.`is`(nullValue()))
         // WHEN attempting to save the location
         vm.saveLocation()
-        // THEN a snackbar is triggered to suggest the user to select a location
+        // THEN a snackBar is triggered to suggest the user to select a location
         vm.showSnackBar.getOrAwaitValue()
         MatcherAssert.assertThat(
             vm.showSnackBar.value, CoreMatchers.`is`(mockApp.getString(R.string.select_location))
         )
-        // AND locationSaved remains false
-        MatcherAssert.assertThat(vm.locationSaved.value, CoreMatchers.`is`(false))
-        // AND data source is never updated
-        // TODO
+        // AND locationSaved remains null
+        MatcherAssert.assertThat(vm.locationSaved.value, CoreMatchers.`is`(nullValue()))
     }
 
     @Test
     fun onClear() {
-        // Setup
-        startKoinWithFakeDatasource()
         // WHEN onClear is called (mostly when user logout/login)
         vm.onClear()
         // THEN data is cleared to guarantee no data is kept when users switches
@@ -243,8 +212,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun saveReminder() = runTest {
-        // Setup
-        startKoinWithFakeDatasource()
         val expectedNewTitle = "saveReminderTest"
         val owner = TestLifecycleOwner()
 
@@ -301,8 +268,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun validateEnteredDataWhenReminderIsNull() {
-        // Setup
-        startKoinWithFakeDatasource()
         // GIVEN reminder is null
         // THEN validation returns false
         MatcherAssert.assertThat(vm.validateEnteredData(), CoreMatchers.`is`(false))
@@ -310,8 +275,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun validateEnteredDataWithUserUidNull() {
-        // Setup
-        startKoinWithFakeDatasource()
         // GIVEN reminder has no user uid set
         val reminder = ReminderDataItem.fromReminderDTO(fakeDataSource.reminder1)
         reminder.userUniqueId = null
@@ -324,8 +287,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun validateEnteredDataWithDifferentUser() {
-        // Setup
-        startKoinWithFakeDatasource()
         // GIVEN reminder has a user uid different from currently logged in user
         MatcherAssert.assertThat(user.userUniqueId.value, CoreMatchers.`is`(fakeDataSource.user1id))
         val reminder = ReminderDataItem.fromReminderDTO(fakeDataSource.reminder1)
@@ -339,8 +300,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun validateEnteredDataWithRequiredFieldsMissing() {
-        // Setup
-        startKoinWithFakeDatasource()
         val reminder = ReminderDataItem.fromReminderDTO(fakeDataSource.reminder1)
 
         // GIVEN title is not set
@@ -384,8 +343,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun onLoginSuccessful() {
-        // Setup
-        startKoinWithFakeDatasource()
         // WHEN user logs in (before tests logs in an user)
         vm.authenticated.getOrAwaitValue()
         MatcherAssert.assertThat(vm.authenticated.value, CoreMatchers.`is`(true))
@@ -401,8 +358,6 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
 
     @Test
     fun onLogoutCompleted() {
-        // Setup
-        startKoinWithFakeDatasource()
         // WHEN user logs our (before tests logs in an user)
         user.logout()
         vm.authenticated.getOrAwaitValue()
