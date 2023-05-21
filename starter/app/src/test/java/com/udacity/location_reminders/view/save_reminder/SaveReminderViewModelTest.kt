@@ -7,7 +7,7 @@ import com.udacity.location_reminders.data.FakeDataSource
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.dto.ReminderDTO
 import com.udacity.location_reminders.domain.UserInterface
-import com.udacity.location_reminders.domain.UserTest
+import com.udacity.location_reminders.domain.FakeUser
 import com.udacity.location_reminders.test_utils.MainCoroutineRule
 import com.udacity.location_reminders.test_utils.getOrAwaitValue
 import com.udacity.location_reminders.view.base.NavigationCommand
@@ -70,7 +70,7 @@ class SaveReminderViewModelTest : AutoCloseKoinTest() {
         GlobalContext.startKoin {
             modules(module {
                 single<ReminderDataSource> { fakeDataSource }
-                single<UserInterface> { UserTest() }
+                single<UserInterface> { FakeUser() }
                 single { SaveReminderViewModel(mockApp, get(), get()) }
             })
         }
