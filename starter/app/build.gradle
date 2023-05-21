@@ -85,7 +85,7 @@ dependencies {
     debugImplementation "androidx.fragment:fragment-testing:1.5.7"
     debugImplementation "androidx.test:core:1.5.0"
 
-    // Testing - Core
+    // Testing - Core - Unit Testing
     testImplementation "org.hamcrest:hamcrest:$version_hamcrest"
     testImplementation "androidx.test:core-ktx:1.5.0"
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"
@@ -94,12 +94,14 @@ dependencies {
     testImplementation 'androidx.test:runner:1.5.2'
     testImplementation 'org.robolectric:robolectric:4.9'
 
-    // Dependencies for Android instrumented tests
-    androidTestImplementation "junit:junit:$version_junit_androidx"
-    androidTestImplementation "androidx.test.ext:junit:$version_junit_androidx"
+    // Testing - Core - Instrumented Testing
+    androidTestImplementation "org.hamcrest:hamcrest:$version_hamcrest"
+    androidTestImplementation "androidx.test:core-ktx:1.5.0"
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
+    androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_kotlin_coroutines"
-    androidTestImplementation "androidx.test:core:1.5.0"
     androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'org.robolectric:robolectric:4.9'
 
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_expresso_core"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$version_expresso_core"
@@ -118,39 +120,15 @@ dependencies {
     //Koin
     implementation "io.insert-koin:koin-android:$version_koin"
 
-
-    // AndroidX Test - JVM testing
-//    testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
-//    testImplementation "androidx.test.ext:junit-ktx:$androidXTestExtKotlinRunnerVersion"
-//    testImplementation "androidx.test:rules:$androidXTestRulesVersion"
-
-    // AndroidX Test - Instrumented testing
-//    androidTestImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
-//    androidTestImplementation "androidx.test.ext:junit-ktx:$androidXTestExtKotlinRunnerVersion"
-//    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-//    androidTestImplementation "androidx.test:rules:$androidXTestRulesVersion"
-//    androidTestImplementation "androidx.room:room-testing:$roomVersion"
-//    androidTestImplementation "androidx.arch.core:core-testing:$archTestingVersion"
-//    androidTestImplementation "org.robolectric:annotations:$robolectricVersion"
-//    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-//    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-//    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
-//    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVersion"
-//    androidTestImplementation "junit:junit:$junitVersion"
-//    // Once https://issuetracker.google.com/127986458 is fixed this can be testImplementation
-//    implementation "androidx.fragment:fragment-testing:$fragmentVersion"
-//    implementation "androidx.test:core:$androidXTestCoreVersion"
-//    implementation "androidx.fragment:fragment:$fragmentVersion"
-//
-//    androidTestImplementation "org.mockito:mockito-core:5.2.0"
-//    androidTestImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.28.3'
-
-//    androidTestImplementation('org.koin:koin-test:2.0.1') { exclude group: 'org.mockito' }
     // Koin Test features
     testImplementation "io.insert-koin:koin-test:$version_koin"
     // Koin for JUnit 4
     testImplementation "io.insert-koin:koin-test-junit4:$version_koin"
     testImplementation "io.insert-koin:koin-android:$version_koin"
+
+    androidTestImplementation "io.insert-koin:koin-test:$version_koin"
+    androidTestImplementation "io.insert-koin:koin-test-junit4:$version_koin"
+    androidTestImplementation "io.insert-koin:koin-android:$version_koin"
 
     //Maps & Geofencing: support registering location reminder geofence and getting app notified
     implementation "com.google.android.gms:play-services-maps:$version_maps"

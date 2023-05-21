@@ -8,10 +8,12 @@ import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.data.ReminderDataSource
 import com.udacity.location_reminders.data.local.LocalDB
 import com.udacity.location_reminders.data.local.RemindersLocalRepository
+import com.udacity.location_reminders.test_utils.MainCoroutineRule
 import com.udacity.location_reminders.view.reminders_list.RemindersListViewModel
 import com.udacity.location_reminders.view.save_reminder.SaveReminderViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
+import org.junit.Rule
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -29,6 +31,9 @@ class RemindersActivityTest :
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
 
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRule()
+
     /**
      * As we use Koin as a Service Locator Library to develop our code, we'll also use Koin to test our code.
      * at this step we will initialize Koin related code to be able to use it in out testing.
@@ -41,12 +46,14 @@ class RemindersActivityTest :
             viewModel {
                 RemindersListViewModel(
                     appContext,
+                    get(),
                     get() as ReminderDataSource
                 )
             }
             single {
                 SaveReminderViewModel(
                     appContext,
+                    get(),
                     get() as ReminderDataSource
                 )
             }

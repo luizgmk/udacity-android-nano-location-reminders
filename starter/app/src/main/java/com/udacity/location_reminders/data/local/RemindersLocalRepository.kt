@@ -11,18 +11,18 @@ import kotlinx.coroutines.*
  * The repository is implemented so that you can focus on only testing it.
  *
  * @param remindersDao the dao that does the Room db operations
- * @param ioDispatcher a coroutine dispatcher to offload the blocking IO tasks
+ * @param dispatcher a coroutine dispatcher to offload the blocking IO tasks
  */
 class RemindersLocalRepository(
     private val remindersDao: RemindersDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ReminderDataSource {
 
     /**
      * Get the reminders list from the local db
      * @return Result the holds a Success with all the reminders or an Error object with the error message
      */
-    override suspend fun getReminders(userUniqueId : String): Result<List<ReminderDTO>> = withContext(ioDispatcher) {
+    override suspend fun getReminders(userUniqueId : String): Result<List<ReminderDTO>> = withContext(dispatcher) {
         return@withContext try {
             Result.Success(remindersDao.getReminders(userUniqueId))
         } catch (ex: Exception) {
@@ -35,7 +35,7 @@ class RemindersLocalRepository(
      * @param reminder the reminder to be inserted
      */
     override suspend fun saveReminder(reminder: ReminderDTO) =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             remindersDao.saveReminder(reminder)
         }
 
@@ -44,7 +44,7 @@ class RemindersLocalRepository(
      * @param id to be used to get the reminder
      * @return Result the holds a Success object with the Reminder or an Error object with the error message
      */
-    override suspend fun getReminder(userUniqueId : String, id: String): Result<ReminderDTO> = withContext(ioDispatcher) {
+    override suspend fun getReminder(userUniqueId : String, id: String): Result<ReminderDTO> = withContext(dispatcher) {
         try {
             val reminder = remindersDao.getReminderById(id, userUniqueId)
             if (reminder != null) {
@@ -61,7 +61,7 @@ class RemindersLocalRepository(
      * Deletes all the reminders in the db
      */
     override suspend fun deleteAllReminders(userUniqueId: String) {
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             remindersDao.deleteAllReminders(userUniqueId)
         }
     }
