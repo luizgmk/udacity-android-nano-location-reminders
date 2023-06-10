@@ -64,7 +64,7 @@ class FakeDataSource : ReminderDataSource {
         else Result.Success(reminders[userUniqueId] as List<ReminderDTO>)
     }
 
-    val lastSavedReminder = SingleLiveEvent<ReminderDTO?>()
+    private val lastSavedReminder = SingleLiveEvent<ReminderDTO?>()
     override suspend fun saveReminder(reminder: ReminderDTO) {
         lastSavedReminder.postValue(reminder)
         delay(serviceLatencyInMillis)

@@ -1,6 +1,5 @@
 package com.udacity.location_reminders.view
 
-import android.app.Activity
 import android.app.Application
 import android.view.View
 import android.widget.SeekBar
@@ -37,6 +36,7 @@ import com.udacity.location_reminders.view.reminders_list.ReminderDataItem
 import com.udacity.location_reminders.view.reminders_list.RemindersListViewModel
 import com.udacity.location_reminders.view.save_reminder.SaveReminderViewModel
 import com.udacity.location_reminders.view.save_reminder.select_reminder_location.SelectLocationFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.*
@@ -124,6 +124,7 @@ class RemindersActivityTest :
     }
 
     //    DONE: add End to End testing to the app
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun firebaseCustomUI() = runTest {
         // GIVEN no user is logged in
@@ -141,6 +142,7 @@ class RemindersActivityTest :
 
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun remindersE2ETest() = runTest {
         // GIVEN user1 is logged in
@@ -241,13 +243,8 @@ class RemindersActivityTest :
         onView(allOf(withId(R.id.saveReminder), isDisplayed())).perform(click())
 
         // WHEN the user clicks on the first reminder in the list
-        waitForElement<TextView>(
-            scenario,
-            "wait for the snack bar",
-            com.google.android.material.R.id.snackbar_text
-        )
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText(appContext.getString(R.string.select_location))))
+        verifySnackBar(scenario, appContext.getString(R.string.select_location))
+
         // Select location
         onView(withId(R.id.selectLocation)).perform(click())
 
@@ -278,14 +275,14 @@ class RemindersActivityTest :
         )
         // set a marker
         // https://stackoverflow.com/questions/29924564/using-espresso-to-unit-test-google-maps
-        onView(withContentDescription("Google Map")).perform(click());
+        onView(withContentDescription("Google Map")).perform(click())
         waitForCondition("wait location name to become available") {
             r.location = getText(withId(R.id.placeName))
             !r.location.isNullOrEmpty()
         }
         MatcherAssert.assertThat(r.location.isNullOrEmpty(), `is`(false))
         onView(withId(R.id.placeName)).check(matches(withText(r.location)))
-        var geofenceDescription = buildGeofenceDescription(r)
+        val geofenceDescription = buildGeofenceDescription(r)
         // save the location
         waitForElement<TextView>(scenario, "wait save button to be ready", R.id.save)
         waitForCondition("wait for location live data", timeoutLimit = 30000) {
@@ -321,12 +318,17 @@ class RemindersActivityTest :
         // confirm name of selected place is carried over
         verifyReminderData(r, geofenceDescription)
         // Save the reminder
-        onView(withId(R.id.saveReminder)).perform(click())
-        waitForElement<FloatingActionButton>(
-            scenario,
-            "wait return from save reminder screen",
-            R.id.addReminderFAB
-        )
+        waitForCondition("retry click if no transition", timeoutLimit = 30000) {
+            onView(withId(R.id.saveReminder)).perform(click())
+            waitForElement<TextView>(
+                scenario,
+                "wait return from save location screen",
+                R.id.addReminderFAB,
+                timeoutLimit = 1000,
+                skipException = true
+            )
+            scenarioActivityElementExists<TextView>(scenario, R.id.addReminderFAB)
+        }
 
         // THEN recyclerview displays one reminder
         onView(withId(R.id.remindersRecyclerView))
@@ -362,7 +364,7 @@ class RemindersActivityTest :
         scenario: ActivityScenario<RemindersActivity>,
         originalR: ReminderDataItem,
         newR: ReminderDataItem,
-        expectedRemindersCount: Int = 1
+        expectedRemindersCount: Int
     ) {
         // THEN recyclerview displays one reminder
         onView(withId(R.id.remindersRecyclerView))
@@ -418,7 +420,7 @@ class RemindersActivityTest :
         )
         // set a marker
         // https://stackoverflow.com/questions/29924564/using-espresso-to-unit-test-google-maps
-        onView(withContentDescription("Google Map")).perform(click());
+        onView(withContentDescription("Google Map")).perform(click())
         waitForCondition("wait location name to become available") {
             newR.location = getText(withId(R.id.placeName))
             !newR.location.isNullOrEmpty()
@@ -502,7 +504,7 @@ class RemindersActivityTest :
     }
 
     // obtained from: https://stackoverflow.com/questions/23659367/espresso-set-seekbar
-    private fun setProgress(progress: Int): ViewAction? {
+    private fun setProgress(progress: Int): ViewAction {
         return object : ViewAction {
             override fun perform(uiController: UiController?, view: View) {
                 val seekBar = view as SeekBar

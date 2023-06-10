@@ -30,6 +30,7 @@ import com.udacity.location_reminders.utils.condition_watcher.ConditionWatcher
 import com.udacity.location_reminders.utils.EspressoIdlingResource
 import com.udacity.location_reminders.utils.condition_watcher.Instruction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -120,7 +121,7 @@ class ReminderListFragmentTest : KoinTest {
                 override fun getDescription(): String { return "wait reminders reflect to the list" }
                 override fun checkCondition(): Boolean {
                     var result = false
-                    scenario.onFragment() {
+                    scenario.onFragment {
                         result = it.view?.findViewById<RecyclerView?>(R.id.remindersRecyclerView)?.childCount == 2
                     }
                     return result
@@ -163,10 +164,10 @@ class ReminderListFragmentTest : KoinTest {
 
             // WHEN the user clicks on the second reminder in the list
             ConditionWatcher.waitForCondition(object : Instruction() {
-                override fun getDescription(): String { return "checking snackbar" }
+                override fun getDescription(): String { return "checking snack bar" }
                 override fun checkCondition(): Boolean {
                     var result = false
-                    scenario.onFragment() {
+                    scenario.onFragment {
                         result = it.view?.findViewById<RecyclerView?>(R.id.remindersRecyclerView)?.childCount == 2
                     }
                     return result
@@ -231,7 +232,10 @@ class ReminderListFragmentTest : KoinTest {
     @Test
     fun reminderListOnNoReminderData() = runTest {
         // GIVEN the logged in user has no reminders registered
-        fakeRepository.deleteAllReminders(fakeDataSource.user1id)
+        runBlocking {
+            // only scenario getting flaky, so for now run blocking to prevent the issue
+            fakeRepository.deleteAllReminders(fakeDataSource.user1id)
+        }
         FragmentScenario.launchInContainer(
             ReminderListFragment::class.java,
             Bundle(),
@@ -247,10 +251,10 @@ class ReminderListFragmentTest : KoinTest {
 
             // THEN the No Data icon is displayed
             ConditionWatcher.waitForCondition(object : Instruction() {
-                override fun getDescription(): String { return "checking snackbar" }
+                override fun getDescription(): String { return "checking snack bar" }
                 override fun checkCondition(): Boolean {
                     var result = false
-                    scenario.onFragment() {
+                    scenario.onFragment {
                         result = it.view?.findViewById<View>(R.id.noDataTextView) != null
                     }
                     return result
@@ -363,13 +367,13 @@ class ReminderListFragmentTest : KoinTest {
                 // https://github.com/AzimoLabs/ConditionWatcher/tree/master
 
                 override fun getDescription(): String {
-                    return "checking snackbar"
+                    return "checking snack bar"
                 }
 
                 override fun checkCondition(): Boolean {
                     var result = false
 
-                    scenario.onFragment() {
+                    scenario.onFragment {
                         val snackBar = it.activity?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                         result = snackBar != null
                     }
