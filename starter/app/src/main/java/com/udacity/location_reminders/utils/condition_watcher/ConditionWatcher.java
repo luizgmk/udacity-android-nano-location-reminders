@@ -59,7 +59,7 @@ public class ConditionWatcher {
             }
         } while (status != CONDITION_MET);
 
-        if (status == TIMEOUT)
+        if (status == TIMEOUT && !instruction.skipException())
             throw new Exception(instruction.getDescription() + " - took more than " + timeoutLimit/1000 + " seconds. Test stopped.");
     }
 

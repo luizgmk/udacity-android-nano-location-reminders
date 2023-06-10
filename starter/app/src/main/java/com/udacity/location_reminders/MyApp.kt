@@ -1,6 +1,8 @@
 package com.udacity.location_reminders
 
 import android.app.Application
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.udacity.location_reminders.view.authentication.AuthenticationViewModel
 import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.data.ReminderDataSource
@@ -35,7 +37,10 @@ class MyApp : Application() {
                 )
             }
             viewModel {
-                AuthenticationViewModel(get(), get())
+                AuthenticationViewModel(get(), get(), get())
+            }
+            single {
+                Firebase.auth
             }
             //Declare singleton definitions to be later injected using by inject()
             single {
@@ -46,7 +51,7 @@ class MyApp : Application() {
                     get()
                 )
             }
-            single<UserInterface> { User() }
+            single<UserInterface> { User(get()) }
             single<ReminderDataSource> { RemindersLocalRepository(get()) }
             single { LocalDB.createRemindersDao(this@MyApp) }
         }

@@ -13,6 +13,16 @@ public abstract class Instruction {
 
     private Bundle dataContainer = new Bundle();
 
+    private boolean _skipException = false;
+
+    public boolean skipException() {
+        return _skipException;
+    }
+
+    public void disableThrowingExceptions() {
+        _skipException = true;
+    }
+
     public final void setData(Bundle dataContainer) {
         this.dataContainer = dataContainer;
     }

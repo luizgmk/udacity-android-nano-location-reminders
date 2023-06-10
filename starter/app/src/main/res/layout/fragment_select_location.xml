@@ -50,6 +50,7 @@
                 tools:text="@string/unknown_location" />
 
             <SeekBar
+                android:id="@+id/radiusSeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_small"

@@ -2,20 +2,16 @@ package com.udacity.location_reminders.authentication.data
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.udacity.location_reminders.domain.UserInterface
 import com.udacity.location_reminders.view.authentication.AuthenticationActivity
 import com.udacity.location_reminders.utils.Log
 
-class User : UserInterface {
+class User(private val auth : FirebaseAuth) : UserInterface {
 
     private val log = Log("UserDomain")
-    private val auth = Firebase.auth
 
     private val internalUniqueUserId = MutableLiveData(auth.currentUser?.uid)
     override val userUniqueId: LiveData<String?>

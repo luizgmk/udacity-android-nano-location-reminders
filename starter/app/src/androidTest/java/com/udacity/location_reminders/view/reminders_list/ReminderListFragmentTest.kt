@@ -117,7 +117,7 @@ class ReminderListFragmentTest : KoinTest {
             }
             // WHEN the user clicks on the first reminder in the list
             ConditionWatcher.waitForCondition(object : Instruction() {
-                override fun getDescription(): String { return "checking snackbar" }
+                override fun getDescription(): String { return "wait reminders reflect to the list" }
                 override fun checkCondition(): Boolean {
                     var result = false
                     scenario.onFragment() {

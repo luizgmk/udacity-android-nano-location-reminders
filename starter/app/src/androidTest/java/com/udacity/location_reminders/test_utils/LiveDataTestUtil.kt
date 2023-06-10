@@ -3,6 +3,8 @@ package com.udacity.location_reminders.test_utils
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -22,20 +24,22 @@ fun <T> LiveData<T>.getOrAwaitValue(
             this@getOrAwaitValue.removeObserver(this)
         }
     }
-    this.observeForever(observer)
+    val ref = this
+    runBlocking(Dispatchers.Main) {
+        ref.observeForever(observer)
 
-    try {
-        afterObserve.invoke()
+        try {
+            afterObserve.invoke()
 
-        // Don't wait indefinitely if the LiveData is not set.
-        if (!latch.await(time, timeUnit)) {
-            throw TimeoutException("LiveData value was never set.")
+            // Don't wait indefinitely if the LiveData is not set.
+            if (!latch.await(time, timeUnit)) {
+                throw TimeoutException("LiveData value was never set.")
+            }
+
+        } finally {
+            ref.removeObserver(observer)
         }
-
-    } finally {
-        this.removeObserver(observer)
     }
-
     @Suppress("UNCHECKED_CAST")
     return data as T
 }

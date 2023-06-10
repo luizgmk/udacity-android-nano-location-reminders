@@ -1,25 +1,18 @@
 package com.udacity.location_reminders.view.authentication
 
-import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.udacity.location_reminders.R
-import com.udacity.location_reminders.authentication.data.User
 import com.udacity.location_reminders.domain.UserInterface
-import com.udacity.location_reminders.view.base.BaseViewModel
 import com.udacity.location_reminders.utils.SingleLiveEvent
-import com.udacity.location_reminders.view.RemindersActivity
+import com.udacity.location_reminders.view.base.BaseViewModel
 
-class AuthenticationViewModel(app: Application, user: UserInterface) : BaseViewModel(app, user) {
-
-    private val auth = Firebase.auth
+class AuthenticationViewModel(app: Application, user: UserInterface, private val auth : FirebaseAuth) : BaseViewModel(app, user) {
 
     val launchLoginUIEvent: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
